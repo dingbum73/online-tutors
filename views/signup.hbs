@@ -1,0 +1,35 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mt-3">註冊會員</h1>
+      <form action="/signup" method="POST">
+        <div class="mb-3">
+          <label for="name" class="mb-2">名字<span class="required text-danger">*</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" value="{{name}}">
+        </div>
+        <div class="mb-3">
+          <label for="email" class="mb-2">電子郵件<span class="required text-danger">*</label>
+          <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" value="{{email}}">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="mb-2">密碼<span class="required text-danger">*</label>
+          <input type="password" id="password" name="password" class="form-control" minlength="8"
+            placeholder="Enter Password at least 8 characters" value="{{password}}">
+        </div>
+        <div class="mb-3">
+          <label for="confirmPassword" class="mb-2">確認密碼<span class="required text-danger">*</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+            placeholder="Confirm Password" value="{{confirmPassword}}">
+        </div>
+        <div class="d-flex flex-column">
+          <button type="submit" class="btn btn-info btn-block mb-2">登入</button>
+          <hr />
+          <a href="#" class="btn btn-outline-primary btn-block">Google登入</a>
+        </div>
+      </form>
+      <p class="lead mt-4">
+        已經有帳號? <a href="/signin">登入</a>
+      </p>
+    </div>
+  </div>
+</div>

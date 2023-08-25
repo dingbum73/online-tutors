@@ -43,6 +43,17 @@ const userController = {
     req.logout(() => {
       res.redirect('/signin')
     })
+  },
+  getUser: async (req, res, next) => {
+    const { id } = req.params
+    try {
+      const user = await User.findByPk(id, { raw: true })
+      console.log(user)
+      if (!user) throw new Error('此用戶不存在')
+      return res.render('users/profile', { user })
+    } catch (err) {
+      next(err)
+    }
   }
 }
 

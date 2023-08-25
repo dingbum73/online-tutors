@@ -6,6 +6,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {{#if user}}
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="#">我的檔案</a>
@@ -13,7 +14,9 @@
         <li class="nav-item">
           <a class="nav-link" href="#">成為老師</a>
         </li>
-        <a class="btn btn-outline-success" type="button" href="/logout">登出</a>
+      </ul>
+      <a class="btn btn-outline-success" type="button" href="/logout">登出</a>
+      {{/if}}
     </div>
   </div>
 </nav>

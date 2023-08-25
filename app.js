@@ -5,7 +5,8 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require('express')
 const exphbs = require('express-handlebars')
 const router = require('./routes')
-
+const flash = require('connect-flash')
+const session = require('express-session')
 
 const app = express()
 const port = process.env.PORT
@@ -13,6 +14,16 @@ const port = process.env.PORT
 app.engine('hbs', exphbs.create({ defaultLayout: 'main', extname: '.hbs' }).engine)
 app.set('view engine', 'hbs')
 app.set('views', './views')
+
+app.use(express.urlencoded({ extended: true }))
+
+app.use(session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false }))
+app.use(flash())
+app.use((req, res, next) => {
+  res.locals.success_messages = req.flash('success_messages')
+  res.locals.error_messages = req.flash('error_messages')
+  next()
+})
 
 app.use(router)
 

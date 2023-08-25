@@ -24,9 +24,11 @@ module.exports = {
         type: Sequelize.TEXT
       },
       is_teacher: {
+        defaultValue: 0,
         type: Sequelize.BOOLEAN
       },
       is_admin: {
+        defaultValue: 0,
         type: Sequelize.BOOLEAN
       },
       created_at: {

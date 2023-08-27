@@ -1,0 +1,30 @@
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <form action="/users/{{user.id}}" method="POST">
+        <div class="mb-3">
+          <label for="name" class="mb-2">名字</label>
+          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" value="{{name}}">
+        </div>
+        <div class="mb-3">
+          <label for="nation" class="mb-2">國別</label>
+          <input type="text" id="nation" name="nation" class="form-control" placeholder="Enter your country"
+            value="{{nation}}">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="image">Image</label>
+          <input class="form-control" type="file" class="form-control-file" id="image" name="image">
+        </div>
+        <div class="mb-3">
+          <label for="introduction" class="mb-2">自我介紹</label>
+          <textarea name="introduction" id="introduction" class="form-control" placeholder="Describe yourself"
+            value="{{introduction}}"></textarea>
+        </div>
+        <div class="d-flex ">
+          <button type="submit" class="btn btn-info btn-block m-2">確認編輯</button>
+          <a class="btn btn-outline-secondary btn-block m-2" href="javascript:history.back()">Back</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

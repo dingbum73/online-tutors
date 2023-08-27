@@ -12,6 +12,7 @@ router.get('/signup', userController.signUpPage)
 router.post('/signup', userController.signUp)
 router.get('/logout', userController.logout)
 router.get('/users/:id', authenticated, userController.getUser)
+router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/teachers/join', authenticated, teacherController.getTeacher)
 router.post('/teachers/join', authenticated, teacherController.postTeacher)
 

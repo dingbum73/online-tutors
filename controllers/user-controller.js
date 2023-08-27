@@ -53,9 +53,18 @@ const userController = {
         nest: true
       })
       if (!user) throw new Error('此用戶不存在')
-      console.log(user)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
       return res.render('users/profile', { user })
+    } catch (err) {
+      next(err)
+    }
+  },
+  editUser: async (req, res, next) => {
+    const id = req.user.id
+    try {
+      const user = await User.findByPk(id, { raw: true })
+      if (!user) throw new Error('此用戶不存在')
+      return res.render('users/edit-profile', { user })
     } catch (err) {
       next(err)
     }

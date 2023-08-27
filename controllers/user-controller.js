@@ -54,7 +54,7 @@ const userController = {
       })
       if (!user) throw new Error('此用戶不存在')
       console.log(user)
-      user.isTeacher = user.isTeacher.id || null
+      user.isTeacher = user.isTeacher.id ? user.isTeacher : null
       return res.render('users/profile', { user })
     } catch (err) {
       next(err)

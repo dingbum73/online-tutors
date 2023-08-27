@@ -11,12 +11,15 @@
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/users/{{user.id}}"> {{user.name}} </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/teachers/join">成為老師</a>
-        </li>
+        {{#if user.isTeacher}}
         <li class="nav-item">
           <a class="nav-link" href="/teachers/{{user.id}}">老師</a>
         </li>
+        {{else}}
+        <li class="nav-item">
+          <a class="nav-link" href="/teachers/join">成為老師</a>
+        </li>
+        {{/if}}
       </ul>
     </div>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">

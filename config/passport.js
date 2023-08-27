@@ -1,7 +1,8 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
+const { User, Teacher } = require('../models')
+const { Model } = require('sequelize')
 
 passport.use(new LocalStrategy({
   usernameField: 'email',
@@ -22,7 +23,12 @@ passport.use(new LocalStrategy({
 passport.serializeUser((user, cb) => { cb(null, user.id) })
 passport.deserializeUser(async (id, cb) => {
   try {
-    const user = await User.findByPk(id)
+    const user = await User.findByPk(id, {
+      include: [
+        { model: Teacher, as: 'isTeacher' }
+      ]
+    })
+    console.log(user.toJSON())
     cb(null, user.toJSON())
   } catch (err) {
     cb(err, null)

@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User } = require('../models')
+const { User, Teacher } = require('../models')
 
 const userController = {
   signInPage: (req, res) => {
@@ -47,9 +47,14 @@ const userController = {
   getUser: async (req, res, next) => {
     const id = req.user.id
     try {
-      const user = await User.findByPk(id, { raw: true })
-      console.log(user)
+      const user = await User.findByPk(id, {
+        include: [{ model: Teacher, as: 'isTeacher' }],
+        raw: true,
+        nest: true
+      })
       if (!user) throw new Error('此用戶不存在')
+      console.log(user)
+      user.isTeacher = user.isTeacher.id || null
       return res.render('users/profile', { user })
     } catch (err) {
       next(err)

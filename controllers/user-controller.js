@@ -45,7 +45,7 @@ const userController = {
     })
   },
   getUser: async (req, res, next) => {
-    const { id } = req.params
+    const id = req.user.id
     try {
       const user = await User.findByPk(id, { raw: true })
       console.log(user)

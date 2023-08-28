@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const { User, Teacher } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
   signInPage: (req, res) => {
@@ -65,6 +66,25 @@ const userController = {
       const user = await User.findByPk(id, { raw: true })
       if (!user) throw new Error('此用戶不存在')
       return res.render('users/edit-profile', { user })
+    } catch (err) {
+      next(err)
+    }
+  },
+  putUser: async (req, res, next) => {
+    const id = req.user.id
+    const { name, nation, introduction } = req.body
+    const { file } = req
+    try {
+      const user = await User.findByPk(id)
+      const filePath = await imgurFileHandler(file)
+      if (!user) throw new Error('此用戶不存在')
+      await user.update({
+        name: name || user.name,
+        nation,
+        introduction: introduction || user.introduction,
+        image: filePath || user.image
+      })
+      return res.redirect('/users/profile')
     } catch (err) {
       next(err)
     }

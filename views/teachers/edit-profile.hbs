@@ -1,30 +1,31 @@
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
     <div class="card card-body">
-      <form action="/teachers/join" method="POST">
+      <form action="/teachers/{{teacher.id}}?_method=PUT" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
           <label for="name" class="mb-2">Name<span class="required text-danger">*</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" >
+          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name"
+            value="{{teacher.name}}">
         </div>
         <div class="mb-3">
           <label for="introduction" class="mb-2">Your Introduction<span class="required text-danger">*</label>
           <textarea name="introduction" id="introduction" class="form-control"
-            placeholder="Enter Your Introduction"></textarea>
+            placeholder="Enter Your Introduction">{{teacher.introduction}}</textarea>
         </div>
         <div class="mb-3">
           <label for="teachingStyle" class="mb-2">Your Teaching Style<span class="required text-danger">*</label>
           <textarea name="teachingStyle" id="teachingStyle" class="form-control"
-            placeholder="Enter Your Teaching Style"></textarea>
+            placeholder="Enter Your Teaching Style">{{teacher.teachingStyle}}</textarea>
         </div>
         <div class="mb-3">
           <label for="duringTime" class="mb-2">單堂課程時間(分鐘)<span class="required text-danger">*</label>
           <input type="text" id="duringTime" name="duringTime" class="form-control" placeholder="輸入教學分鐘"
-            >
+            value="{{teacher.duringTime}}">
         </div>
         <div class="mb-3">
 
           <label for="url" class="mb-2">視訊連結<span class="required text-danger">*</label>
-          <input type="text" id="url" name="url" class="form-control" placeholder="Enter URL" >
+          <input type="text" id="url" name="url" class="form-control" placeholder="Enter URL" value="{{teacher.url}}">
         </div>
         <div class="mb-3">
           <fieldset>
@@ -45,8 +46,13 @@
             <label for="SUN" class="mb-2">SUN</label>
           </fieldset>
         </div>
+        <div class="mb-3">
+          <label class="form-label" for="image">Image</label>
+          <input class="form-control" type="file" class="form-control-file" id="image" name="image">
+        </div>
         <div class="d-flex flex-column">
-          <button type="submit" class="btn btn-info btn-block mb-2">Submit</button>
+          <button type="submit" class="btn btn-info btn-block mb-2">確認編輯</button>
+          <a class="btn btn-outline-secondary btn-block m-2" href="javascript:history.back()">Back</a>
         </div>
       </form>
     </div>

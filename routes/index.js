@@ -15,8 +15,11 @@ router.get('/logout', userController.logout)
 router.get('/users/:id', authenticated, userController.getUser)
 router.get('/users/:id/edit', authenticated, userController.editUser)
 router.put('/users/:id', upload.single('image'), authenticated, userController.putUser)
-router.get('/teachers/join', authenticated, teacherController.getTeacher)
+router.get('/teachers/join', authenticated, teacherController.joinTeacher)
+router.get('/teachers/:id', authenticated, teacherController.getTeacher)
+router.get('/teachers/:id/edit', authenticated, teacherController.editTeacher)
 router.post('/teachers/join', authenticated, teacherController.postTeacher)
+
 
 router.get('/', authenticated, lessonController.getLessons)
 

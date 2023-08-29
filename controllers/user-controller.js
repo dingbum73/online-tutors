@@ -63,8 +63,13 @@ const userController = {
   editUser: async (req, res, next) => {
     const id = req.user.id
     try {
-      const user = await User.findByPk(id, { raw: true })
+      const user = await User.findByPk(id, {
+        include: [{ model: Teacher, as: 'isTeacher' }],
+        raw: true,
+        nest: true
+      })
       if (!user) throw new Error('此用戶不存在')
+      user.isTeacher = user.isTeacher.id ? user.isTeacher : null
       return res.render('users/edit-profile', { user })
     } catch (err) {
       next(err)

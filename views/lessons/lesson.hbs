@@ -1,0 +1,72 @@
+<div class="container">
+  <div class="d-flex flex-row mt-2">
+    <div class="col-md-4 mx-auto mt-2">
+      <img class="img-responsive center-block mb-5" src="{{teacher.image}}" alt={{teacher.name}}
+        style="width: 200px ;height: 200px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
+    </div>
+    <div class="col-md-4 mx-auto mt-5">
+      <h1>{{teacher.name}}</h1>
+      <p>{{#if teacher.isUser.nation}}{{teacher.isUser.nation}}{{else}}others{{/if}}</p>
+      <h6>4.8</h6>
+    </div>
+    <div class="col-md-4 mx-auto mt-2">
+      <div class="mb-3">
+        <h6 class="badge bg-info-subtle text-wrap fw-bold text-black fs-6 text" style="width: 10rem;">預約上課</h6>
+        <form action="/teachers/{{teacher.id}}" method="POST" class="was-validated">
+          <select class="form-select" required aria-label="choose time">
+            <option value="">Time</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+          <div class="invalid-feedback">invalid select</div>
+          <button class="btn btn-info mt-3" type="submit" data-bs-toggle="modal"
+            data-bs-target="#chooseLessonModal">Button</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="d-flex flex-column mb-2">
+    <div class="col-md-12 mx-auto mt-2">
+      <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Introduction</h6>
+      <p>{{teacher.introduction}}</p>
+
+    </div>
+    <div class="col-md-12 mx-auto mt-2">
+      <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Teaching Style</h6>
+      <p>{{teacher.teachingStyle}}</p>
+
+    </div>
+    <div class="col-md-12 mx-auto mt-2">
+      <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Reviews</h6>
+      <p>
+        <span class="badge rounded-pill bg-warning font-weight-normal">
+          4.8
+          <i class="fas fa-star fa-xs"></i>
+        </span>
+        123456789123456789123456789123456789123456789123456789
+      </p>
+    </div>
+  </div>
+</div>
+
+{{!-- chooseLessonModal --}}
+<div class="modal fade" id="chooseLessonModal" tabindex="-1" aria-labelledby="chooseLessonModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="chooseLessonModalLabel">預約成功</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

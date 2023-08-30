@@ -25,6 +25,11 @@ const lessonController = {
     } catch (err) {
       next(err)
     }
+  },
+  postAppointment: (req, res, next) => {
+    const id = req.params.id
+    const { appointment } = req.body
+    const chooseLesson = { date: appointment }
   }
 }
 

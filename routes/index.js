@@ -20,8 +20,10 @@ router.get('/teachers/:id', authenticated, teacherController.getTeacher)
 router.get('/teachers/:id/edit', authenticated, teacherController.editTeacher)
 router.post('/teachers/join', authenticated, teacherController.postTeacher)
 
-router.get('/', authenticated, lessonController.getLessons)
 router.get('/lessons/:id', authenticated, lessonController.getLesson)
+router.post('/lessons/:id', authenticated, lessonController.postAppointment)
+router.get('/lessons/:id', authenticated, lessonController.postAppointment)
+router.get('/', authenticated, lessonController.getLessons)
 
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
 router.get('/', (req, res) => res.redirect('index'))

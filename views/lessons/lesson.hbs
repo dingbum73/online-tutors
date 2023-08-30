@@ -12,18 +12,18 @@
     <div class="col-md-4 mx-auto mt-2">
       <div class="mb-3">
         <h6 class="badge bg-info-subtle text-wrap fw-bold text-black fs-6 text" style="width: 10rem;">預約上課</h6>
-        {{!-- <form action="/teachers/{{teacher.id}}" method="POST" class="was-validated"> --}}
-          <select class="form-select" required aria-label="choose time">
+        <input id="teacher-id" type="text" value="{{teacher.id}}" hidden>
+        <form action="/lessons/{{teacher.id}}" method="POST" class="was-validated">
+          <select id="appointment" class="form-select" name="appointment" required aria-label="choose time">
             <option value="">Time</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+            <option value="One">One</option>
+            <option value="Two">Two</option>
+            <option value="Three">Three</option>
           </select>
           <div class="invalid-feedback">invalid select</div>
-          <button class="btn btn-info mt-3" type="submit" data-bs-toggle="modal"
-            data-bs-target="#chooseLessonModal">Button</button>
-          {{!--
-        </form> --}}
+          <button id="chooseLesson" class="btn btn-info mt-3" type="submit" data-bs-toggle="modal"
+            data-bs-target="#chooseLessonModal">預約</button>
+        </form>
       </div>
     </div>
   </div>
@@ -65,17 +65,15 @@
       <div class="modal-body">
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">預約時間：</span>
-          <input class="form-control" type="text" value="" aria-label="Disabled input example" disabled readonly>
+          <input id="choose-lesson-modal" class="form-control" type="text" value="" aria-label="預約時間" disabled readonly>
         </div>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">預約老師：</span>
-          <input class="form-control" type="text" value="{{teacher.name}}" aria-label="Disabled input example" disabled
-            readonly>
+          <input class="form-control" type="text" value="{{teacher.name}}" aria-label="預約老師" disabled readonly>
         </div>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">上課網址：</span>
-          <input class="form-control" type="text" value="{{teacher.url}}" aria-label="Disabled input example" disabled
-            readonly>
+          <input class="form-control" type="text" value="{{teacher.url}}" aria-label="上課網址" disabled readonly>
         </div>
       </div>
       <div class="modal-footer">
@@ -84,3 +82,4 @@
     </div>
   </div>
 </div>
+

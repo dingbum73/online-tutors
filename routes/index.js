@@ -18,6 +18,7 @@ router.put('/users/:id', upload.single('image'), authenticated, userController.p
 router.get('/teachers/join', authenticated, teacherController.joinTeacher)
 router.get('/teachers/:id', authenticated, teacherController.getTeacher)
 router.get('/teachers/:id/edit', authenticated, teacherController.editTeacher)
+router.put('/teachers/:id', upload.single('image'), authenticated, teacherController.putTeacher)
 router.post('/teachers/join', authenticated, teacherController.postTeacher)
 
 router.get('/lessons/:id', authenticated, lessonController.getLesson)

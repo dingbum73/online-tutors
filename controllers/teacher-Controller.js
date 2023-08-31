@@ -1,4 +1,5 @@
 const { Teacher } = require('../models')
+const { imgurFileHandler } = require('../helpers/file-helpers')
 const teacherController = {
   joinTeacher: (req, res) => {
     res.render('teachers/teacher-form')
@@ -40,7 +41,31 @@ const teacherController = {
     } catch (err) {
       next(err)
     }
+  },
+  putTeacher: async (req, res, next) => {
+    const id = req.user.id
+    const { name, introduction, teachingStyle, duringTime, url, appointment } = req.body
+    const { file } = req
+    try {
+      console.log(appointment)
+      const teacher = await Teacher.findOne({ where: { userId: id } })
+      console.log('>>>>>', teacher)
+      if (!teacher) throw new Error('此用戶不存在')
+      const filePath = await imgurFileHandler(file)
+      await teacher.update({
+        name: name || teacher.name,
+        introduction: introduction || teacher.introduction,
+        teachingStyle: teachingStyle || teacher.teachingStyle,
+        duringTime: duringTime || teacher.duringTime,
+        url: url || teacher.url,
+        appointment,
+        image: filePath || teacher.image
+      })
+
+      return res.redirect('/teachers/profile')
+    } catch (err) {
+      next(err)
+    }
   }
 }
-
 module.exports = teacherController

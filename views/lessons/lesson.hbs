@@ -16,9 +16,9 @@
         <form action="/lessons/{{teacher.id}}" method="POST" class="was-validated">
           <select id="appointment" class="form-select" name="appointment" required aria-label="choose time">
             <option value="">Time</option>
-            <option value="One">One</option>
-            <option value="Two">Two</option>
-            <option value="Three">Three</option>
+            {{#each teacher.appointment}}
+            <option value="{{this}}">{{this}}</option>
+            {{/each}}
           </select>
           <div class="invalid-feedback">invalid select</div>
           <button id="chooseLesson" class="btn btn-info mt-3" type="submit" data-bs-toggle="modal"
@@ -82,4 +82,3 @@
     </div>
   </div>
 </div>
-

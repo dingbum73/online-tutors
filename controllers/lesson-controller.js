@@ -21,15 +21,14 @@ const lessonController = {
         raw: true,
         nest: true
       })
+      console.log(typeof (teacher.appointment), teacher.appointment)
       return res.render('lessons/lesson', { teacher })
     } catch (err) {
       next(err)
     }
   },
   postAppointment: (req, res, next) => {
-    const id = req.params.id
-    const { appointment } = req.body
-    const chooseLesson = { date: appointment }
+
   }
 }
 

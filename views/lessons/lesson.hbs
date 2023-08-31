@@ -16,7 +16,7 @@
         <form action="/lessons/{{teacher.id}}" method="POST" class="was-validated">
           <select id="appointment" class="form-select" name="appointment" required aria-label="choose time">
             <option value="">Time</option>
-            {{#each teacher.appointment}}
+            {{#each teacher.selection}}
             <option value="{{this}}">{{this}}</option>
             {{/each}}
           </select>

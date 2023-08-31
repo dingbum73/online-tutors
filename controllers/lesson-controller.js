@@ -1,4 +1,5 @@
 const { User, Teacher } = require('../models')
+const { calculate } = require('../helpers/time-helpers')
 
 const lessonController = {
   getLessons: async (req, res, next) => {
@@ -21,7 +22,9 @@ const lessonController = {
         raw: true,
         nest: true
       })
-      console.log(typeof (teacher.appointment), teacher.appointment)
+      const selection = calculate(teacher.appointment, [], teacher.duringTime)
+      teacher.selection = selection
+      console.log(teacher.selection)
       return res.render('lessons/lesson', { teacher })
     } catch (err) {
       next(err)

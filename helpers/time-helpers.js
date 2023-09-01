@@ -1,9 +1,10 @@
 const dayjs = require('dayjs')
 
-const calculate = (appointment, madeAppointment, during) => {
+// 須帶入三組參數：老師可預約的星期（arr）、已經被預約的日期（arr）、上課時長
+const calculate = (appointment, madeAppointment, duringTime) => {
   let newDay = dayjs()
   const afterTwoWeeks = newDay.add(14, 'day')
-  const startTime = '18:00'
+  const startTime = '18:00' // 可預約開始時間
   const endTime = '22:01'
   const newAppointment = []
 
@@ -14,7 +15,7 @@ const calculate = (appointment, madeAppointment, during) => {
       const endingTime = dayjs(`${newDay.format('YYYY-MM-DD')} ${endTime}`)
       while (currentTime.isBefore(endingTime)) {
         newAppointment.push(currentTime.format('YYYY-MM-DD HH:mm'))
-        currentTime = currentTime.add(parseInt(during), 'minute')
+        currentTime = currentTime.add(parseInt(duringTime), 'minute')
       }
     }
   }

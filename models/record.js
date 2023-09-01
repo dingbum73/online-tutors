@@ -17,8 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   Record.init({
     userId: DataTypes.INTEGER,
     teacherId: DataTypes.INTEGER,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
+    startDate: DataTypes.STRING,
     duringTime: DataTypes.INTEGER
   }, {
     sequelize,

@@ -14,7 +14,7 @@
         <h6 class="badge bg-info-subtle text-wrap fw-bold text-black fs-6 text" style="width: 10rem;">預約上課</h6>
         <input id="teacher-id" type="text" value="{{teacher.id}}" hidden>
         <form action="/lessons/{{teacher.id}}" method="POST" class="was-validated">
-          <select id="appointment" class="form-select" name="appointment" required aria-label="choose time">
+          <select id="choose-time" class="form-select" name="appointment" required aria-label="choose time">
             <option value="">Time</option>
             {{#each teacher.selection}}
             <option value="{{this}}">{{this}}</option>
@@ -65,19 +65,22 @@
       <div class="modal-body">
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">預約時間：</span>
-          <input id="choose-lesson-modal" class="form-control" type="text" value="" aria-label="預約時間" disabled readonly>
+          <input id="choose-lesson-modal" class="form-control" type="text" value="0" aria-label="預約時間" disabled
+            readonly>
         </div>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">預約老師：</span>
-          <input class="form-control" type="text" value="{{teacher.name}}" aria-label="預約老師" disabled readonly>
+          <input id="teacher-name-modal" class="form-control" type="text" value="{{teacher.name}}" aria-label="預約老師"
+            disabled readonly>
         </div>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">上課網址：</span>
-          <input class="form-control" type="text" value="{{teacher.url}}" aria-label="上課網址" disabled readonly>
+          <input id="teacher-url-modal" class="form-control" type="text" value="{{teacher.url}}" aria-label="上課網址"
+            disabled readonly>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="modal-close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

@@ -15,19 +15,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       start_date: {
-        type: Sequelize.DATE
-      },
-      end_date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       during_time: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

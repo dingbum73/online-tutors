@@ -26,7 +26,6 @@ const teacherController = {
     try {
       const teacher = await Teacher.findOne({ where: { userId: id }, raw: true })
       if (!teacher) throw new Error('此用戶不存在')
-      console.log(teacher)
       res.render('teachers/profile', { teacher })
     } catch (err) {
       next(err)
@@ -47,9 +46,7 @@ const teacherController = {
     const { name, introduction, teachingStyle, duringTime, url, appointment } = req.body
     const { file } = req
     try {
-      console.log(appointment)
       const teacher = await Teacher.findOne({ where: { userId: id } })
-      console.log('>>>>>', teacher)
       if (!teacher) throw new Error('此用戶不存在')
       const filePath = await imgurFileHandler(file)
       await teacher.update({

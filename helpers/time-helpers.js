@@ -20,6 +20,12 @@ const calculate = (appointment, madeAppointment, duringTime) => {
     }
   }
 
+  const result = deDuplicate(newAppointment, madeAppointment)
+  return result
+}
+
+// 新舊預約去重複
+const deDuplicate = (newAppointment, madeAppointment) => {
   const result = newAppointment.filter(e => {
     return madeAppointment.indexOf(e) === -1
   }).concat(madeAppointment.filter(f => {
@@ -28,6 +34,13 @@ const calculate = (appointment, madeAppointment, duringTime) => {
   return result
 }
 
+// 是否被預約了
+const isBooking = (newAppointment, madeAppointment) => {
+  return madeAppointment.some(x => x === newAppointment)
+}
+
 module.exports = {
-  calculate
+  calculate,
+  deDuplicate,
+  isBooking
 }

@@ -13,8 +13,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
           const newRecord = response.data
           if (!newRecord.startDate) {
-            chooseLessonContent.value = ''
-            teacherUrlModal.value = ''
+            newRecord.startDate = '-'
+            chooseLessonContent.value = newRecord.startDate
+            teacherUrlModal.value = '無'
             chooseLessonModalLabel.textContent = `預約失敗:${newRecord.info}`
           }
           chooseLessonContent.value = newRecord.startDate

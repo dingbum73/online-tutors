@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Teacher } = require('../models')
+const { User, Teacher, Record } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
@@ -54,8 +54,17 @@ const userController = {
         nest: true
       })
       if (!user) throw new Error('此用戶不存在')
+
+      const findRecords = await Record.findAll({
+        where: { userId: id },
+        include: { model: Teacher },
+        raw: true,
+        nest: true
+      })
+      const records = findRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
+      console.log('records:', records)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
-      return res.render('users/profile', { user })
+      return res.render('users/profile', { user, records })
     } catch (err) {
       next(err)
     }

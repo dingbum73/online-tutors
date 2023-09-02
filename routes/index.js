@@ -23,6 +23,7 @@ router.post('/teachers/join', authenticated, teacherController.postTeacher)
 
 router.get('/lessons/:id', authenticated, lessonController.getLesson)
 router.post('/api/records', authenticated, lessonController.postAppointment)
+router.delete('/records/:id', authenticated, lessonController.delAppointment)
 router.get('/', authenticated, lessonController.getLessons)
 
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)

@@ -34,13 +34,37 @@ const deDuplicate = (newAppointment, madeAppointment) => {
   return result
 }
 
-// 是否被預約了
+// 是否被預約了，被預約返回TRUE
 const isBooking = (newAppointment, madeAppointment) => {
   return madeAppointment.some(x => x === newAppointment)
+}
+
+// 回傳日期、開始時間、結束時間
+const timeTools = (startDate, duringTime) => {
+  const newDay = dayjs(startDate).format('YYYY-MM-DD')
+  const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm')
+  const endTime = dayjs(startDate).add(duringTime, 'minute').format('YYYY-MM-DD HH:mm')
+  return {
+    newDay, startTime, endTime
+  }
+}
+// 新預約的課程是否與已經預約的課程重疊
+// 預約選課時間是否重複了  madeAppointment 是物件 { }
+const isRepeat = (newAppointment, duringTime, findRecords) => {
+  const newRes = timeTools(newAppointment, duringTime)
+  for (const x of findRecords) {
+    const res = timeTools(x.startDate, x.duringTime)
+    if (res.newDay !== newRes.newDay) continue
+    if (dayjs(newRes.startTime).isSame(res.startTime) || dayjs(newRes.endTime).isSame(res.endTime) || (dayjs(newRes.startTime).isAfter(res.startTime) && dayjs(newRes.startTime).isBefore(res.endTime))) {
+      return true
+    }
+  }
+  return false
 }
 
 module.exports = {
   calculate,
   deDuplicate,
-  isBooking
+  isBooking,
+  isRepeat
 }

@@ -34,11 +34,12 @@ const lessonController = {
     }
   },
   postAppointment: async (req, res, next) => {
-    const id = req.params.id
+    // const id = req.params.id
     const userId = req.user.id
-    const { appointment } = req.body
+    const { appointment, id } = req.body
     try {
-      const teacher = await Teacher.findByPk(id, { raw: true })
+      console.log('req.body', req.body)
+      const teacher = await Teacher.findByPk(id)
       if (!teacher) throw new Error('此用戶不存在')
 
       if (teacher.userId === userId) return res.json({ info: '無法預約自己的課' })

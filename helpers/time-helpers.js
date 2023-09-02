@@ -62,9 +62,20 @@ const isRepeat = (newAppointment, duringTime, findRecords) => {
   return false
 }
 
+// 確認老師目前可上課的日期與前端請求的日期相同：請求正確返回true
+// teacherAppointment [] ,userAppointment 字串
+const isOpen = (teacherAppointment, userAppointment) => {
+  const today = dayjs().format('YYYY-MM-DD')
+  const newDay = dayjs(userAppointment).day()
+  if (dayjs(userAppointment).format('YYYY-MM-DD').isBefore(today)) return false
+  if (teacherAppointment.map(x => parseInt(x)).includes(newDay)) return true
+  return false
+}
+
 module.exports = {
   calculate,
   deDuplicate,
   isBooking,
-  isRepeat
+  isRepeat,
+  isOpen
 }

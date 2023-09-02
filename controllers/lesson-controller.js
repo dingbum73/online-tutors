@@ -34,7 +34,6 @@ const lessonController = {
     }
   },
   postAppointment: async (req, res, next) => {
-    // const id = req.params.id
     const userId = req.user.id
     const { appointment, id } = req.body
     try {

@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const { User, Teacher, Record } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
+const { Op } = require('sequelize')
 
 const userController = {
   signInPage: (req, res) => {
@@ -48,23 +49,37 @@ const userController = {
   getUser: async (req, res, next) => {
     const id = req.user.id
     try {
-      const user = await User.findByPk(id, {
-        include: [{ model: Teacher, as: 'isTeacher' }],
-        raw: true,
-        nest: true
-      })
+      const [user, findNewRecords, findOldRecords] = await Promise.all([
+        User.findByPk(id, {
+          include: [{ model: Teacher, as: 'isTeacher' }],
+          raw: true,
+          nest: true
+        }),
+        Record.findAll({
+          where: {
+            userId: id,
+            startDate: { [Op.gte]: new Date() }
+          },
+          include: { model: Teacher },
+          raw: true,
+          nest: true
+        }),
+        Record.findAll({
+          where: {
+            userId: id,
+            startDate: { [Op.lt]: new Date() }
+          },
+          include: { model: Teacher },
+          raw: true,
+          nest: true
+        })
+      ])
       if (!user) throw new Error('此用戶不存在')
 
-      const findRecords = await Record.findAll({
-        where: { userId: id },
-        include: { model: Teacher },
-        raw: true,
-        nest: true
-      })
-      const records = findRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      console.log('records:', records)
+      const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
+      const oldRecords = findOldRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
-      return res.render('users/profile', { user, records })
+      return res.render('users/profile', { user, newRecords, oldRecords })
     } catch (err) {
       next(err)
     }

@@ -68,7 +68,7 @@ const lessonController = {
       await record.destroy()
       return res.redirect(`/users/${userId}`)
     } catch (err) {
-
+      next(err)
     }
   }
 }

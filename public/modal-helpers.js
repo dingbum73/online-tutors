@@ -13,11 +13,12 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
           const newRecord = response.data
           if (!newRecord.startDate) {
-            chooseLessonContent.value = ''
-            teacherUrlModal.value = ''
+            chooseLessonContent.value = '--'
+            teacherUrlModal.value = '--'
             chooseLessonModalLabel.textContent = `預約失敗:${newRecord.info}`
+          } else {
+            chooseLessonContent.value = newRecord.startDate
           }
-          chooseLessonContent.value = newRecord.startDate
         }).catch(err => {
           console.log(err)
         })

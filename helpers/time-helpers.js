@@ -1,12 +1,56 @@
 const dayjs = require('dayjs')
 
-// 須帶入三組參數：老師可預約的星期（arr）、已經被預約的日期（arr）、上課時長
-// 找出老師可上課的時間
-const calculate = (appointment, madeAppointment, duringTime) => {
+// 回傳日期、開始時間、結束時間
+const timeTools = (startDate, duringTime) => {
+  const newDay = dayjs(startDate).format('YYYY-MM-DD')
+  const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm')
+  const endTime = dayjs(startDate).add(duringTime, 'minute').format('YYYY-MM-DD HH:mm')
+  return {
+    newDay, startTime, endTime
+  }
+}
+
+// 是否是未來時間
+const isLessonInFuture = madeAppointment => {
+  const madeAppointmentInfuture = []
+  let todayAddOne = dayjs()
+  todayAddOne = todayAddOne.add(1, 'day')
+  for (const x of madeAppointment) {
+    const res = timeTools(x, 0)
+    if (!dayjs(res.newDay).isBefore(todayAddOne.format('YYYY-MM-DD'))) {
+      madeAppointmentInfuture.push(x)
+    }
+  }
+  return madeAppointmentInfuture
+}
+
+const deDuplicate = (newAppointment, madeAppointment) => {
+  const result = newAppointment.filter(time => !madeAppointment.includes(time))
+  return result
+}
+
+// 是否被預約了，被預約返回TRUE
+const isBooking = (newAppointment, madeAppointment) => {
+  return madeAppointment.some(x => x === newAppointment)
+}
+
+// 確認老師目前可上課的日期與前端請求的日期相同：請求正確返回true
+// teacherAppointment [] ,userAppointment 字串
+const isOpen = (teacherAppointment, userAppointment) => {
+  const today = dayjs()
+  const newDay = dayjs(userAppointment).format('YYYY-MM-DD')
+  if (dayjs(newDay).isBefore(today.format('YYYY-MM-DD'))) return false
+  if (teacherAppointment.map(x => parseInt(x)).includes(dayjs(newDay).day())) return true
+  return false
+}
+
+// 須帶入參數：老師可預約的星期（arr）、上課時長
+// 找出老師未來可上課的時間
+const openLessonDay = (appointment, duringTime) => {
   let newDay = dayjs()
   const afterTwoWeeks = newDay.add(14, 'day')
   const startTime = '18:00' // 可預約開始時間
-  const endTime = '22:01'
+  const endTime = '21:30'
   const newAppointment = []
 
   while (newDay.isBefore(afterTwoWeeks)) {
@@ -20,35 +64,9 @@ const calculate = (appointment, madeAppointment, duringTime) => {
       }
     }
   }
-
-  const result = deDuplicate(newAppointment, madeAppointment)
-  return result
+  return newAppointment
 }
 
-// 新舊預約去重複
-const deDuplicate = (newAppointment, madeAppointment) => {
-  const result = newAppointment.filter(e => {
-    return madeAppointment.indexOf(e) === -1
-  }).concat(madeAppointment.filter(f => {
-    return newAppointment.indexOf(f) === -1
-  }))
-  return result
-}
-
-// 是否被預約了，被預約返回TRUE
-const isBooking = (newAppointment, madeAppointment) => {
-  return madeAppointment.some(x => x === newAppointment)
-}
-
-// 回傳日期、開始時間、結束時間
-const timeTools = (startDate, duringTime) => {
-  const newDay = dayjs(startDate).format('YYYY-MM-DD')
-  const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm')
-  const endTime = dayjs(startDate).add(duringTime, 'minute').format('YYYY-MM-DD HH:mm')
-  return {
-    newDay, startTime, endTime
-  }
-}
 // 新預約的課程是否與已經預約的課程重疊
 // 預約選課時間是否重複了  madeAppointment 是物件 { }
 const isRepeat = (newAppointment, duringTime, findRecords) => {
@@ -63,14 +81,11 @@ const isRepeat = (newAppointment, duringTime, findRecords) => {
   return false
 }
 
-// 確認老師目前可上課的日期與前端請求的日期相同：請求正確返回true
-// teacherAppointment [] ,userAppointment 字串
-const isOpen = (teacherAppointment, userAppointment) => {
-  const today = dayjs().format('YYYY-MM-DD')
-  const newDay = dayjs(userAppointment).day()
-  if (dayjs(userAppointment).format('YYYY-MM-DD').isBefore(today)) return false
-  if (teacherAppointment.map(x => parseInt(x)).includes(newDay)) return true
-  return false
+const calculate = (appointment, madeAppointment, duringTime) => {
+  const madeAppointmentFilter = isLessonInFuture(madeAppointment)
+  const newAppointmentFilter = openLessonDay(appointment, duringTime)
+  const result = deDuplicate(newAppointmentFilter, madeAppointmentFilter)
+  return result
 }
 
 module.exports = {

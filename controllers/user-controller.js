@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
-const { User, Teacher, Record } = require('../models')
+const { User, Teacher, Record, Comment } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
-const { Op } = require('sequelize')
+const { Op, Sequelize } = require('sequelize')
 
 const userController = {
   signInPage: (req, res) => {
@@ -49,7 +49,7 @@ const userController = {
   getUser: async (req, res, next) => {
     const id = req.user.id
     try {
-      const [user, findNewRecords, findOldRecords] = await Promise.all([
+      const [user, findNewRecords, findComments] = await Promise.all([
         User.findByPk(id, {
           include: [{ model: Teacher, as: 'isTeacher' }],
           raw: true,
@@ -64,23 +64,36 @@ const userController = {
           raw: true,
           nest: true
         }),
-        Record.findAll({
+        Comment.findAll({
           where: {
-            userId: id,
-            startDate: { [Op.lt]: new Date() }
+            userId: id
           },
-          include: { model: Teacher },
-          raw: true,
-          nest: true
+          attributes: [
+            [Sequelize.fn('DISTINCT', Sequelize.col('teacher_id')), 'id']
+          ],
+          raw: true
         })
       ])
       if (!user) throw new Error('此用戶不存在')
+      const hasCommentIds = findComments.map(comment => comment.id) // 先找出userId所有已評論過的teacherId
+      // 找出舊紀錄中不包含已評論過的老師
+      const findOldRecords = await Record.findAll({
+        where: {
+          userId: id,
+          startDate: { [Op.lt]: new Date() },
+          teacherId: {
+            [Op.notIn]: hasCommentIds
+          }
+        },
+        include: { model: Teacher },
+        raw: true,
+        nest: true
+      })
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      const oldRecords = findOldRecords.map(r => ({ ...r.Teacher }))
+      const oldRecords = findOldRecords.map(r => ({ ...r.Teacher })) // 找出舊紀錄所有課程
       const uniqueRecords = oldRecords.filter((value, index, self) =>
         self.findIndex(t => t.id === value.id) === index
-      )
-      console.log('uniqueRecords', uniqueRecords)
+      )// 舊紀錄去重複
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
       return res.render('users/profile', { user, newRecords, uniqueRecords })
     } catch (err) {

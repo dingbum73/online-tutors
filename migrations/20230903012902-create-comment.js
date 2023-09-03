@@ -12,7 +12,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       text: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       teacher_id: {
         type: Sequelize.INTEGER
@@ -20,11 +20,11 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }

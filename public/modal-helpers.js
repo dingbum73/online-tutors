@@ -52,19 +52,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // POST COMMENT；commentBtn
   if (commentBtn) {
-    commentBtn.addEventListener('click', function () {
+    commentBtn.addEventListener('click', function (event) {
       event.preventDefault()
       const scoreModalLabel = document.querySelector('#scoreModalLabel')
-      const recordIdOnModal = document.querySelector('#recordIdOnModal').value
-      const scores = document.querySelector('#scores').value
-      const comment = document.querySelector('#comment').value
-      console.log('recordIdOnModal', recordIdOnModal)
-      console.log('scores', scores)
-      axios.post('/comments', { recordIdOnModal, scores, comment })
+      const teacherOnModal = document.querySelector('#teacherOnModal')
+      const scores = document.querySelector('#scores')
+      const comment = document.querySelector('#comment')
+      console.log('scores', scores.value)
+      axios.post('/comments', { teacherId: teacherOnModal.value, scores: scores.value, text: comment.value })
         .then(response => {
-          console.log('response', response.data)
-          scoreModalLabel.value = '評價成功'
-          // scoreButton.hide()
+          const newComment = response.data
+          console.log(newComment)
+          scoreModalLabel.textContent = '評分成功'
         }).catch(err => {
           console.log(err)
         })

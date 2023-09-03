@@ -9,13 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
       const chooseLessonContent = document.querySelector('#choose-lesson-modal')
       const teacherUrlModal = document.querySelector('#teacher-url-modal')
       const chooseLessonModalLabel = document.querySelector('#chooseLessonModalLabel')
-      axios.post('/api/records', { appointment: chooseTime.value, id: teacherId })
+      axios.post('/api/records', { appointment: chooseTime.value, teacherId })
         .then(response => {
           const newRecord = response.data
           if (!newRecord.startDate) {
-            newRecord.startDate = '-'
-            chooseLessonContent.value = newRecord.startDate
-            teacherUrlModal.value = '無'
+            chooseLessonContent.value = ''
+            teacherUrlModal.value = ''
             chooseLessonModalLabel.textContent = `預約失敗:${newRecord.info}`
           }
           chooseLessonContent.value = newRecord.startDate
@@ -29,4 +28,20 @@ document.addEventListener('DOMContentLoaded', function () {
       window.location.reload()
     })
   }
+
+  // Comment Modal
+  const scoreModal = document.getElementById('scoreModal')
+  scoreModal.addEventListener('show.bs.modal', event => {
+    const button = event.relatedTarget
+    const recordId = button.getAttribute('data-record-id')
+    const startDate = document.querySelector('#startDate')
+    axios.post(`/comments/${recordId}/score`, { recordId })
+      .then(response => {
+        const record = response.data
+        startDate.value = record.startDate
+      }).catch(err => {
+        console.log(err)
+      })
+  })
+  const scoreButton = new bootstrap.Modal(scoreModal)
 })

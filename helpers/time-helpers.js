@@ -1,6 +1,7 @@
 const dayjs = require('dayjs')
 
 // 須帶入三組參數：老師可預約的星期（arr）、已經被預約的日期（arr）、上課時長
+// 找出老師可上課的時間
 const calculate = (appointment, madeAppointment, duringTime) => {
   let newDay = dayjs()
   const afterTwoWeeks = newDay.add(14, 'day')

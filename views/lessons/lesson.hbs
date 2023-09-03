@@ -12,9 +12,11 @@
     <div class="col-md-4 mx-auto mt-2">
       <div class="mb-3">
         <h6 class="badge bg-info-subtle text-wrap fw-bold text-black fs-6 text" style="width: 10rem;">預約上課</h6>
+        <input type="text" id="teacher-id" name="teacherId" value="{{teacher.id}}" class="form-control mb-2" hidden
+          readonly>
         <form action="/api/records" method="POST" class="was-validated">
-          <input id="teacher-id" name="teacherId" type="text" value="{{teacher.id}}" hidden readonly>
-          <select id="choose-time" class="form-select" name="appointment" required aria-label="choose time">
+          <select id="choose-time" data-teacher-id="{{teacher.id}}" class="form-select" name="appointment" required
+            aria-label="choose time">
             <option value="">Time</option>
             {{#each teacher.selection}}
             <option value="{{this}}">{{this}}</option>

@@ -44,9 +44,9 @@
           <img class="rounded-circle" src="{{this.Teacher.image}}" style="width: 50px ;height: 50px;"
             alt="this.Teacher.image">
           <p>老師名字：{{this.Teacher.name}}</p>
-          <form action="#" method="POST" style="display: inline;">
-            <button type="submit" class="btn btn btn-primary btn-sm">Score</button>
-          </form>
+          <p>課程編號：{{this.id}}</p>
+          <button type="button" class="btn btn btn-primary btn-sm" data-bs-toggle="modal" data-record-id="{{this.id}}"
+            data-bs-target="#scoreModal">Score</button>
         </div>
         {{/each}}
       </div>

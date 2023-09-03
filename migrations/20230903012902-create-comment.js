@@ -14,9 +14,6 @@ module.exports = {
       text: {
         type: Sequelize.STRING
       },
-      record_id: {
-        type: Sequelize.INTEGER
-      },
       teacher_id: {
         type: Sequelize.INTEGER
       },

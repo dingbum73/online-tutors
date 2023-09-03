@@ -26,8 +26,8 @@ router.get('/lessons/:id', authenticated, lessonController.getLesson)
 router.post('/api/records', authenticated, lessonController.postAppointment)
 router.delete('/records/:id', authenticated, lessonController.delAppointment)
 
-router.post('/comments/:recordId/score', authenticated, commentController.getCommentScore)
-// router.post('/comments/:recordId/score', authenticated, commentController.postCommentScore)
+router.get('/comments/:teacherId', authenticated, commentController.getCommentScore)
+router.post('/comments', authenticated, commentController.postCommentScore)
 // router.get('/comments', authenticated, commentController.getComments)
 
 router.get('/', authenticated, lessonController.getLessons)

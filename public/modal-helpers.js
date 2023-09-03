@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const button = document.querySelector('#chooseLesson')
+  const commentBtn = document.querySelector('#commentBtn')
   const modalCloseBtn = document.querySelector('#modal-close')
+  const btnClose = document.querySelector('btn-close')
   if (button) {
     button.addEventListener('click', function (event) {
       event.preventDefault()
@@ -34,15 +36,44 @@ document.addEventListener('DOMContentLoaded', function () {
   const scoreModal = document.getElementById('scoreModal')
   scoreModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
-    const recordId = button.getAttribute('data-record-id')
-    const startDate = document.querySelector('#startDate')
-    axios.post(`/comments/${recordId}/score`, { recordId })
+    const teacherId = button.getAttribute('data-teacher-id')
+    const teacherName = document.querySelector('#teacherName')
+    const teacherOnModal = document.querySelector('#teacherOnModal')
+    axios.get(`/comments/${teacherId}`)
       .then(response => {
-        const record = response.data
-        startDate.value = record.startDate
+        const teacher = response.data
+        teacherName.value = teacher.name
+        teacherOnModal.value = teacher.id
       }).catch(err => {
         console.log(err)
       })
   })
   const scoreButton = new bootstrap.Modal(scoreModal)
+
+  // POST COMMENT；commentBtn
+  if (commentBtn) {
+    commentBtn.addEventListener('click', function () {
+      event.preventDefault()
+      const scoreModalLabel = document.querySelector('#scoreModalLabel')
+      const recordIdOnModal = document.querySelector('#recordIdOnModal').value
+      const scores = document.querySelector('#scores').value
+      const comment = document.querySelector('#comment').value
+      console.log('recordIdOnModal', recordIdOnModal)
+      console.log('scores', scores)
+      axios.post('/comments', { recordIdOnModal, scores, comment })
+        .then(response => {
+          console.log('response', response.data)
+          scoreModalLabel.value = '評價成功'
+          // scoreButton.hide()
+        }).catch(err => {
+          console.log(err)
+        })
+    })
+  }
+
+  if (btnClose) {
+    btnClose.addEventListener('click', function () {
+      window.location.reload()
+    })
+  }
 })

@@ -75,11 +75,14 @@ const userController = {
         })
       ])
       if (!user) throw new Error('此用戶不存在')
-
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      const oldRecords = findOldRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
+      const oldRecords = findOldRecords.map(r => ({ ...r.Teacher }))
+      const uniqueRecords = oldRecords.filter((value, index, self) =>
+        self.findIndex(t => t.id === value.id) === index
+      )
+      console.log('uniqueRecords', uniqueRecords)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
-      return res.render('users/profile', { user, newRecords, oldRecords })
+      return res.render('users/profile', { user, newRecords, uniqueRecords })
     } catch (err) {
       next(err)
     }

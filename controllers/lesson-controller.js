@@ -39,8 +39,6 @@ const lessonController = {
     const userId = req.user.id
     const { appointment, teacherId } = req.body
     const id = teacherId
-    console.log('userId', userId)
-    console.log('req.body.id', req.body)
     try {
       const [teacher, findAppointment, findRecords] = await Promise.all([
         Teacher.findByPk(id, { raw: true }),

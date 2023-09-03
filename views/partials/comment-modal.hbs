@@ -6,17 +6,16 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <input type="text" id="teacherOnModal" name="teacherOnModal" class="form-control mb-2" disabled readonly>
+        <input type="text" id="teacherOnModal" name="teacherOnModal" class="form-control mb-2" hidden readonly>
         <input type="text" id="teacherName" name="teacherName" placeholder="上課時間" class="form-control mb-2" disabled
           readonly>
         <input type="number" min="1" max="5" step="0.5" id="scores" name="scores" placeholder="可填入1~5分"
           class="form-control mb-2">
         <input type="text" id="comment" name="comment" placeholder="留下評論吧" class="form-control mb-2">
       </div>
-      <div id="commentBtnFooter" class="modal-footer">
-
-        {{!-- <button id="commentBtn" type="button" class="btn btn btn-primary btn-sm">summit</button> --}}
-
+      <div id="commentFooterSummit" class="modal-footer">
+        <button id="modalCloseOnComments" type="button" class="btn btn-secondary invisible"
+          data-bs-dismiss="modal">Close</button>
         <form action="/comments" method="POST" style="display: inline;">
           <button id="commentBtn" type="submit" class="btn btn btn-primary btn-sm">summit</button>
         </form>

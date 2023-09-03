@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
   const button = document.querySelector('#chooseLesson')
   const commentBtn = document.querySelector('#commentBtn')
   const modalCloseBtn = document.querySelector('#modal-close')
-  const btnClose = document.querySelector('btn-close')
+  const modalCloseOnComments = document.querySelector('#modalCloseOnComments')
+  const scoreModalLabel = document.querySelector('#scoreModalLabel')
+  const scores = document.querySelector('#scores')
+  const comment = document.querySelector('#comment')
   if (button) {
     button.addEventListener('click', function (event) {
       event.preventDefault()
@@ -39,11 +42,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const teacherId = button.getAttribute('data-teacher-id')
     const teacherName = document.querySelector('#teacherName')
     const teacherOnModal = document.querySelector('#teacherOnModal')
+    commentBtn.classList.remove('invisible')
     axios.get(`/comments/${teacherId}`)
       .then(response => {
         const teacher = response.data
-        teacherName.value = teacher.name
         teacherOnModal.value = teacher.id
+        if (teacher.info) {
+          scoreModalLabel.textContent = `無法評分：${teacher.info}`
+          teacherName.value = '--'
+          scores.disabled = true
+          comment.disabled = true
+          commentBtn.classList.add('invisible')
+          modalCloseOnComments.classList.remove('invisible')
+        } else {
+          teacherName.value = teacher.name
+        }
       }).catch(err => {
         console.log(err)
       })
@@ -54,24 +67,33 @@ document.addEventListener('DOMContentLoaded', function () {
   if (commentBtn) {
     commentBtn.addEventListener('click', function (event) {
       event.preventDefault()
-      const scoreModalLabel = document.querySelector('#scoreModalLabel')
       const teacherOnModal = document.querySelector('#teacherOnModal')
-      const scores = document.querySelector('#scores')
-      const comment = document.querySelector('#comment')
-      console.log('scores', scores.value)
       axios.post('/comments', { teacherId: teacherOnModal.value, scores: scores.value, text: comment.value })
         .then(response => {
           const newComment = response.data
-          console.log(newComment)
-          scoreModalLabel.textContent = '評分成功'
+          if (newComment.info === '未上過此課程') {
+            scoreModalLabel.textContent = `無法評分：${newComment.info}`
+            scores.disabled = true
+            comment.disabled = true
+            commentBtn.classList.add('invisible')
+            modalCloseOnComments.classList.remove('invisible')
+          } else if (newComment.info) {
+            scoreModalLabel.textContent = `${newComment.info}`
+          } else {
+            scoreModalLabel.textContent = '評分成功'
+            scores.disabled = true
+            comment.disabled = true
+            commentBtn.classList.add('invisible')
+            modalCloseOnComments.classList.remove('invisible')
+          }
         }).catch(err => {
           console.log(err)
         })
     })
   }
 
-  if (btnClose) {
-    btnClose.addEventListener('click', function () {
+  if (modalCloseOnComments) {
+    modalCloseOnComments.addEventListener('click', function () {
       window.location.reload()
     })
   }

@@ -4,6 +4,12 @@
       style="width: 150px ;height: 150px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
     <h1>{{teacher.name}}</h1>
     <P>{{user.nation}}</P>
+    {{#if avgComment.avgScores}}
+    <span class="badge rounded-pill bg-warning font-weight-normal">
+      {{avgComment.avgScores}}
+      <i class="fas fa-star fa-xs"></i>
+    </span>
+    {{/if}}
     <h4>About me</h4>
     <p>{{teacher.introduction}}</p>
   </div>

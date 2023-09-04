@@ -1,5 +1,6 @@
-const { User, Teacher, Record } = require('../models')
+const { User, Teacher, Record, Comment } = require('../models')
 const { calculate, isBooking, isRepeat, isOpen } = require('../helpers/time-helpers')
+const { Sequelize } = require('sequelize')
 
 const lessonController = {
   getLessons: async (req, res, next) => {
@@ -17,13 +18,30 @@ const lessonController = {
   getLesson: async (req, res, next) => {
     try {
       const { id } = req.params
-      const [teacher, findAppointment] = await Promise.all([
+      const [teacher, findAppointment, highComment, lowComment, avgComment] = await Promise.all([
         Teacher.findByPk(id, {
           include: [{ model: User, as: 'isUser' }],
           raw: true,
           nest: true
         }),
-        Record.findAll({ where: { teacherId: id }, raw: true }) || []
+        Record.findAll({ where: { teacherId: id }, raw: true }) || [],
+        Comment.findOne({
+          where: { teacherId: id },
+          order: [['scores', 'DESC']],
+          raw: true
+        }),
+        Comment.findOne({
+          where: { teacherId: id },
+          order: [['scores', 'ASC']],
+          raw: true
+        }),
+        Comment.findOne({
+          where: { teacherId: id },
+          attributes: [
+            [Sequelize.fn('AVG', Sequelize.col('scores')), 'avgScores']
+          ],
+          raw: true
+        })
       ])
       const madeAppointment = findAppointment.map(a => a.startDate)
       if (typeof (teacher.appointment) !== 'object') {
@@ -31,9 +49,10 @@ const lessonController = {
         newArray.push(teacher.appointment)
         teacher.appointment = newArray
       }
+      avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       teacher.selection = calculate(teacher.appointment, madeAppointment, teacher.duringTime)
-
-      return res.render('lessons/lesson', { teacher })
+      const checkedLowComment = (lowComment && highComment && lowComment.id === highComment.id) ? [] : lowComment
+      return res.render('lessons/lesson', { teacher, highComment, checkedLowComment, avgComment })
     } catch (err) {
       next(err)
     }

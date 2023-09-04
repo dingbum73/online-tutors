@@ -7,7 +7,14 @@
     <div class="col-md-4 mx-auto mt-5">
       <h1>{{teacher.name}}</h1>
       <p>{{#if teacher.isUser.nation}}{{teacher.isUser.nation}}{{else}}others{{/if}}</p>
-      <h6>4.8</h6>
+      {{#if avgComment.avgScores}}
+      <p>
+        <span class="badge rounded-pill bg-warning font-weight-normal">
+          {{avgComment.avgScores}}
+          <i class="fas fa-star fa-xs"></i>
+        </span>
+      </p>
+      {{/if}}
     </div>
     <div class="col-md-4 mx-auto mt-2">
       <div class="mb-3">
@@ -33,6 +40,7 @@
   <div class="d-flex flex-column mb-2">
     <div class="col-md-12 mx-auto mt-2">
       <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Introduction</h6>
+      <i class="bi bi-bookmark-heart"></i>
       <p>{{teacher.introduction}}</p>
 
     </div>
@@ -42,14 +50,25 @@
 
     </div>
     <div class="col-md-12 mx-auto mt-2">
-      <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Reviews</h6>
+      <h6 class="bg-dark-subtle text-wrap fw-bold text-black fs-5 text" style="width: 10rem;">Lesson History</h6>
+      {{#if highComment}}
       <p>
         <span class="badge rounded-pill bg-warning font-weight-normal">
-          4.8
+          {{highComment.scores}}
           <i class="fas fa-star fa-xs"></i>
         </span>
-        123456789123456789123456789123456789123456789123456789
+        {{highComment.text}}
       </p>
+      {{/if}}
+      {{#if checkedLowComment}}
+      <p>
+        <span class="badge rounded-pill bg-warning font-weight-normal">
+          {{checkedLowComment.scores}}
+          <i class="fas fa-star fa-xs"></i>
+        </span>
+        {{checkedLowComment.text}}
+      </p>
+      {{/if}}
     </div>
   </div>
 </div>
@@ -80,8 +99,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button id="modal-close" type="button" class="btn btn-secondary"
-          data-bs-dismiss="modal">Close</button>
+        <button id="modal-close" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

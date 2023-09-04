@@ -1,6 +1,6 @@
 const { Teacher, Record, User, Comment } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
-const { Op } = require('sequelize')
+const { Op, Sequelize } = require('sequelize')
 const teacherController = {
   joinTeacher: (req, res) => {
     res.render('teachers/teacher-form')
@@ -37,7 +37,7 @@ const teacherController = {
       })
       if (!teacher) throw new Error('此用戶不存在')
       const teacherId = teacher.id
-      const [findNewRecords, highComment, lowComment] = await Promise.all([
+      const [findNewRecords, highComment, lowComment, avgComment] = await Promise.all([
         Record.findAll({
           where: {
             teacherId,
@@ -56,16 +56,20 @@ const teacherController = {
           where: { teacherId },
           order: [['scores', 'ASC']],
           raw: true
+        }),
+        Comment.findOne({
+          where: { teacherId },
+          attributes: [
+            [Sequelize.fn('AVG', Sequelize.col('scores')), 'avgScores']
+          ],
+          raw: true
         })
       ])
 
+      avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
       const checkedLowComment = (lowComment && highComment && lowComment.id === highComment.id) ? [] : lowComment
-      console.log('newRecords', newRecords)
-      console.log('highComment', highComment)
-      console.log('lowComment', lowComment)
-      console.log('teacher', teacher)
-      res.render('teachers/profile', { teacher, newRecords, highComment, checkedLowComment })
+      res.render('teachers/profile', { teacher, newRecords, highComment, checkedLowComment, avgComment })
     } catch (err) {
       next(err)
     }

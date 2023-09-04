@@ -24,7 +24,7 @@ const commentController = {
       console.log('postCommentScore', record)
       if (record.length === 0) return res.json({ status: 'error', info: '未上過此課程' })
       const newComment = await Comment.create({
-        scores: parseInt(scores),
+        scores,
         text,
         teacherId,
         userId: id

@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       scores: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
       },
       text: {
         type: Sequelize.TEXT

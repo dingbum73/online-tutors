@@ -10,23 +10,19 @@
   <div class="col-md-8 card">
     <div class="card-body d-flex-inline">
       <h5>New Schedule</h5>
-      <div id="carouselExample" class="carousel carousel-dark slide">
-        <div class="carousel-inner text-center">
-          <div class="carousel-item active d-flex-inline">
-            <img src="#" style="width: 200px ;height: 200px;" alt="...">
-            <img src="#" style="width: 200px ;height: 200px;" alt="...">
-            <img src="#" style="width: 200px ;height: 200px;" alt="...">
-          </div>
+      {{#if newRecords}}
+      <div class="d-flex overflow-auto " style="max-width: 1000px ">
+        {{#each newRecords}}
+        <div class="border border-4 m-1 p-2" style="min-width: 250px ;min-height: 100px;">
+          <p>上課時間：{{this.startDate}}</p>
+          <p>學生名字：{{this.User.name}}</p>
+          <p>上課網址：{{this.Teacher.url}}</p>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
+        {{/each}}
       </div>
+      {{else}}
+      <p>無預約課程</p>
+      {{/if}}
     </div>
     <div class="card-body d-flex-inline">
       <h5>Your Teaching Style</h5>
@@ -34,14 +30,32 @@
     </div>
     <div class="card-body d-flex-inline">
       <h5>Recent Reviewed</h5>
+      {{#if highComment}}
+      <p>
+        <span class="badge rounded-pill bg-warning font-weight-normal">
+          {{highComment.scores}}
+          <i class="fas fa-star fa-xs"></i>
+        </span>
+        {{highComment.text}}
+      </p>
+      {{/if}}
+      {{#if checkedLowComment}}
+      <p>
+        <span class="badge rounded-pill bg-warning font-weight-normal">
+          {{checkedLowComment.scores}}
+          <i class="fas fa-star fa-xs"></i>
+        </span>
+        {{checkedLowComment.text}}
+      </p>
+      {{/if}}
     </div>
   </div>
-  <div>
-    <button type="button" class="btn btn-link">
-      <a class="btn btn-primary" href="/teachers/{{teacher.id}}/edit">
-        Edit
-      </a>
-    </button>
-    <a class="btn btn-outline-secondary" href="/">Back</a>
-  </div>
+</div>
+<div>
+  <button type="button" class="btn btn-link">
+    <a class="btn btn-primary" href="/teachers/{{teacher.id}}/edit">
+      Edit
+    </a>
+  </button>
+  <a class="btn btn-outline-secondary" href="/">Back</a>
 </div>

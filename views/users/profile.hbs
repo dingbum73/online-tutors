@@ -3,7 +3,10 @@
     <img class="img-responsive center-block mb-5" src="{{user.image}}"
       style="width: 150px ;height: 150px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
     <h1>{{user.name}}</h1>
-    <P>{{user.nation}}</P>
+    <span class="badge rounded-pill bg-danger font-weight-normal">
+      {{#if user.nation}} {{user.nation}}{{else}}others{{/if}}
+      <i class="fas fa-star fa-xs"></i>
+    </span>
     <h4>About me</h4>
     <p>{{user.introduction}}</p>
     <hr />
@@ -53,7 +56,10 @@
       {{/if}}
     </div>
     <div class="card-body d-flex-inline">
-      <h5>我的學習時數排名</h5>
+      <h5>我的學習時數名次</h5>
+      <div class="border border-4 m-1 p-2" style="width: 250px ;height: 50px;">
+        {{#if myRankData}} <h5>第{{myRankData}}名</h5>{{else}}<p>---</p>{{/if}}
+      </div>
     </div>
   </div>
 </div>

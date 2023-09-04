@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const { User, Teacher, Record, Comment } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
+const { myRank } = require('../helpers/rank-helpers')
 const { Op, Sequelize } = require('sequelize')
 
 const userController = {
@@ -49,7 +50,7 @@ const userController = {
   getUser: async (req, res, next) => {
     const id = req.user.id
     try {
-      const [user, findNewRecords, findComments] = await Promise.all([
+      const [user, findNewRecords, findComments, allRanks] = await Promise.all([
         User.findByPk(id, {
           include: [{ model: Teacher, as: 'isTeacher' }],
           raw: true,
@@ -72,6 +73,22 @@ const userController = {
             [Sequelize.fn('DISTINCT', Sequelize.col('teacher_id')), 'id']
           ],
           raw: true
+        }),
+        Record.findAll({
+          where: {
+            startDate: { [Op.lt]: new Date() }
+          },
+          include: [{ model: User, attributes: ['name', 'image'] }],
+          attributes: [
+            'user_id',
+            [Sequelize.fn('sum', Sequelize.col('during_time')), 'total']
+          ],
+          group: ['user_id'],
+          order: [
+            [Sequelize.fn('sum', Sequelize.col('during_time')), 'DESC']
+          ],
+          raw: true,
+          nest: true
         })
       ])
       if (!user) throw new Error('此用戶不存在')
@@ -94,8 +111,9 @@ const userController = {
       const uniqueRecords = oldRecords.filter((value, index, self) =>
         self.findIndex(t => t.id === value.id) === index
       )// 舊紀錄去重複
+      const myRankData = myRank(id, allRanks)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
-      return res.render('users/profile', { user, newRecords, uniqueRecords })
+      return res.render('users/profile', { user, newRecords, uniqueRecords, myRankData })
     } catch (err) {
       next(err)
     }

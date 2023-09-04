@@ -1,27 +1,29 @@
 <div class="container">
-  <div class="d-flex justify-content-between">
-    <!-- search bar -->
-    <div class="search-bar">
-      <div class="search-bar-outer">
-        <div class="search-bar-inner">
-          <form action="/search">
-            <h4 class="mb-2">尋找老師：</h4>
-            <div class="input-group">
-              <input type="text" name="keyword" class="form-control" placeholder="輸入老師、關鍵字"
-                aria-label="Teacher's Name..." value="{{keyword}}" aria-describedby="search-button">
-              <div class="input-group-append">
-                <button class="btn btn-major" type="submit" id="search-button"><i class="fas fa-search"></i></button>
+  <div class="d-flex flex-row">
+    <div class="d-flex flex-column flex-grow-1">
+      <!-- search bar -->
+      <div class="row mt-5">
+        <div class="col-md-4 mx-auto">
+          <div class="search-bar">
+            <div class="search-bar-outer">
+              <div class="search-bar-inner">
+                <form action="/search">
+                  <h4 class="mb-2">尋找老師：</h4>
+                  <div class="input-group">
+                    <input type="text" name="keyword" class="form-control" placeholder="輸入老師、關鍵字"
+                      aria-label="Teacher's Name..." value="{{keyword}}" aria-describedby="search-button">
+                    <div class="input-group-append">
+                      <button class="btn btn-primary" type="submit" id="search-button">search</button>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
-
-
-    <!-- list -->
-    <div class="container mt-5">
-      <div class="row">
+      <!-- list -->
+      <div class="row mt-5">
         <div class="col-md-10 col-12 mx-auto">
           <div class="row row-cols-sm-3">
             {{#each teachers}}
@@ -44,6 +46,33 @@
             {{/each}}
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Rank -->
+    <div class="border border-dark border-3 mt-5 mx-auto" style="flex-shrink: 0;">
+      <h3>學習時數排行榜</h3>
+      <div class="d-flex flex-column ">
+        {{#if ranksIndex}}
+        {{#each ranksIndex}}
+        <div class="row row-cols-sm-3">
+          <div class="col-sm-3 ">
+            <img class="border-light rounded-circle mr-5" src="{{this.User.image}}" alt="..."
+              style="width: 50px ;height: 50px;">
+          </div>
+          <div class="col-sm-3">
+            <div class=" d-flex align-items-center">
+              <span class="badge rounded-pill bg-danger font-weight-normal">
+                {{this.rank}}
+                <i class="fas fa-star fa-xs"></i>
+              </span>
+              <strong>{{this.total}}hrs</strong>
+            </div>
+            <h4>{{this.User.name}}</h4>
+            <hr />
+          </div>
+        </div>
+        {{/each}}
+        {{/if}}
       </div>
     </div>
   </div>

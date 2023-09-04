@@ -1,16 +1,38 @@
 const { User, Teacher, Record, Comment } = require('../models')
 const { calculate, isBooking, isRepeat, isOpen } = require('../helpers/time-helpers')
-const { Sequelize } = require('sequelize')
+const { rankIndex } = require('../helpers/rank-helpers')
+const { Op, Sequelize } = require('sequelize')
 
 const lessonController = {
   getLessons: async (req, res, next) => {
     try {
-      const teachers = await Teacher.findAll({
-        include: [{ model: User, as: 'isUser' }],
-        raw: true,
-        nest: true
-      })
-      return res.render('index', { teachers })
+      const [teachers, ranks] = await Promise.all([
+        Teacher.findAll({
+          include: [{ model: User, as: 'isUser' }],
+          raw: true,
+          nest: true
+        }),
+        Record.findAll({
+          where: {
+            startDate: { [Op.lt]: new Date() }
+          },
+          include: [{ model: User, attributes: ['name', 'image'] }],
+          attributes: [
+            'user_id',
+            [Sequelize.fn('sum', Sequelize.col('during_time')), 'total']
+          ],
+          group: ['user_id'],
+          order: [
+            [Sequelize.fn('sum', Sequelize.col('during_time')), 'DESC']
+          ],
+          limit: 10,
+          raw: true,
+          nest: true
+        })
+      ])
+      const ranksIndex = rankIndex(ranks)
+      console.log('ranksIndex', ranksIndex)
+      return res.render('index', { teachers, ranksIndex })
     } catch (err) {
       next(err)
     }

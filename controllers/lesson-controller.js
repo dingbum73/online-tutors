@@ -31,7 +31,6 @@ const lessonController = {
         })
       ])
       const ranksIndex = rankIndex(ranks)
-      console.log('ranksIndex', ranksIndex)
       return res.render('index', { teachers, ranksIndex })
     } catch (err) {
       next(err)
@@ -99,14 +98,13 @@ const lessonController = {
         teacher.appointment = newArray
       }
       if (!isOpen(teacher.appointment, appointment)) return res.json({ status: 'error', info: '該時段未開放' })
-      console.log(teacher, findAppointment, findRecords)
+
       // 確認條件是否正確
       const madeAppointment = findAppointment.map(a => a.startDate)
       const checked = isBooking(appointment, madeAppointment) // 想要預約選課是否已被訂走
       const repeated = isRepeat(appointment, teacher.duringTime, findRecords) // 預約選課時間是否重疊了
       if (checked) return res.json({ status: 'error', info: '已被搶先選走了' })
       if (repeated) return res.json({ status: 'error', info: '該時段已有預約課' })
-
       // 創建新紀錄
       const newRecord = await Record.create({
         userId,

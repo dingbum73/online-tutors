@@ -1,10 +1,21 @@
 const dayjs = require('dayjs')
+const utc = require('dayjs/plugin/utc')
+const timezone = require('dayjs/plugin/timezone')
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+// 找到台北時區
+
+const currentTaipeiTime = () => {
+  return dayjs().tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
+}
 
 // 回傳日期、開始時間、結束時間
 const timeTools = (startDate, duringTime) => {
   const newDay = dayjs(startDate).format('YYYY-MM-DD')
-  const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm')
-  const endTime = dayjs(startDate).add(duringTime, 'minute').format('YYYY-MM-DD HH:mm')
+  const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm:ss')
+  const endTime = dayjs(startDate).add(duringTime, 'minute').format('YYYY-MM-DD HH:mm:ss')
   return {
     newDay, startTime, endTime
   }
@@ -49,8 +60,8 @@ const isOpen = (teacherAppointment, userAppointment) => {
 const openLessonDay = (appointment, duringTime) => {
   let newDay = dayjs()
   const afterTwoWeeks = newDay.add(14, 'day')
-  const startTime = '18:00' // 可預約開始時間
-  const endTime = '21:30'
+  const startTime = '18:00:00' // 可預約開始時間
+  const endTime = '21:30:00'
   const newAppointment = []
 
   while (newDay.isBefore(afterTwoWeeks)) {
@@ -59,7 +70,7 @@ const openLessonDay = (appointment, duringTime) => {
       let currentTime = dayjs(`${newDay.format('YYYY-MM-DD')} ${startTime}`)
       const endingTime = dayjs(`${newDay.format('YYYY-MM-DD')} ${endTime}`)
       while (currentTime.isBefore(endingTime)) {
-        newAppointment.push(currentTime.format('YYYY-MM-DD HH:mm'))
+        newAppointment.push(currentTime.format('YYYY-MM-DD HH:mm:ss'))
         currentTime = currentTime.add(parseInt(duringTime), 'minute')
       }
     }
@@ -89,6 +100,7 @@ const calculate = (appointment, madeAppointment, duringTime) => {
 }
 
 module.exports = {
+  currentTaipeiTime,
   calculate,
   deDuplicate,
   isBooking,

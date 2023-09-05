@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const { User, Teacher, Record, Comment } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
+const { currentTaipeiTime } = require('../helpers/time-helpers')
 const { myRank } = require('../helpers/rank-helpers')
 const { Op, Sequelize } = require('sequelize')
 
@@ -50,6 +51,7 @@ const userController = {
   getUser: async (req, res, next) => {
     const id = req.user.id
     try {
+      const today = currentTaipeiTime()
       const [user, findNewRecords, findComments, allRanks] = await Promise.all([
         User.findByPk(id, {
           include: [{ model: Teacher, as: 'isTeacher' }],
@@ -59,7 +61,8 @@ const userController = {
         Record.findAll({
           where: {
             userId: id,
-            startDate: { [Op.gte]: new Date() }
+            startDate: { [Op.gte]: today }
+            // startDate: { [Op.gte]: new Date() }
           },
           include: { model: Teacher },
           raw: true,
@@ -76,7 +79,7 @@ const userController = {
         }),
         Record.findAll({
           where: {
-            startDate: { [Op.lt]: new Date() }
+            startDate: { [Op.lt]: today }
           },
           include: [{ model: User, attributes: ['name', 'image'] }],
           attributes: [
@@ -97,7 +100,7 @@ const userController = {
       const findOldRecords = await Record.findAll({
         where: {
           userId: id,
-          startDate: { [Op.lt]: new Date() },
+          startDate: { [Op.lt]: today },
           teacherId: {
             [Op.notIn]: hasCommentIds
           }

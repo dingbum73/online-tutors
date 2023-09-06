@@ -8,7 +8,7 @@ module.exports = {
     )
     const randomAppointment = ['[1, 2, 3]', '[1, 3, 5, 0]', '[2, 4, 6]', '[4, 5, 3]', '[6, 0]']
     await queryInterface.bulkInsert('Teachers',
-      Array.from({ length: 30 }, () => ({
+      Array.from({ length: 20 }, () => ({
         name: faker.name.findName(),
         image: 'https://i.imgur.com/lUVseMM.png',
         // image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,

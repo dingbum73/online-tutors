@@ -32,27 +32,27 @@ module.exports = {
         })
       }
     }
-    // 舊紀錄：先找出不重複的Teacher
-    function getRandomTeacherExcluding (usedTeachers) {
-      let selectedTeacher
+    // 舊紀錄：先找出不重複的User
+    function getRandomUserExcluding (usedUsers) {
+      let selectedUser
       do {
-        selectedTeacher = teachers[Math.floor(Math.random() * teachers.length)]
-      } while (usedTeachers.includes(selectedTeacher.id))
-      return selectedTeacher
+        selectedUser = users[Math.floor(Math.random() * users.length)]
+      } while (usedUsers.includes(selectedUser.id))
+      return selectedUser
     }
 
-    for (const r of users) {
-      const usedTeachers = []
+    for (const t of teachers) {
+      const usedUsers = []
       for (let i = 0; i < 4; i++) {
-        const t = getRandomTeacherExcluding(usedTeachers)
-        usedTeachers.push(t.id)
+        const user = getRandomUserExcluding(usedUsers)
+        usedUsers.push(user.id)
 
         const lessonDay = openLessonDay(t.appointment, t.during_time)
         const randomNum = Math.floor(Math.random() * 15) + 30
         const pastDay = dayjs(lessonDay[i]).subtract(randomNum, 'day').format('YYYY-MM-DD HH:mm:ss')
 
         records.push({
-          user_id: r.id,
+          user_id: user.id,
           teacher_id: t.id,
           start_date: pastDay,
           during_time: t.during_time,

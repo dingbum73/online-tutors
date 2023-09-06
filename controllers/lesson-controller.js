@@ -39,21 +39,16 @@ const lessonController = {
   getLesson: async (req, res, next) => {
     try {
       const { id } = req.params
-      const [teacher, findAppointment, highComment, lowComment, avgComment] = await Promise.all([
+      const [teacher, findAppointment, AllComment, avgComment] = await Promise.all([
         Teacher.findByPk(id, {
           include: [{ model: User, as: 'isUser' }],
           raw: true,
           nest: true
         }),
         Record.findAll({ where: { teacherId: id }, raw: true }) || [],
-        Comment.findOne({
+        Comment.findAll({
           where: { teacherId: id },
           order: [['scores', 'DESC']],
-          raw: true
-        }),
-        Comment.findOne({
-          where: { teacherId: id },
-          order: [['scores', 'ASC']],
           raw: true
         }),
         Comment.findOne({
@@ -72,8 +67,9 @@ const lessonController = {
       }
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       teacher.selection = calculate(teacher.appointment, madeAppointment, teacher.duringTime)
-      const checkedLowComment = (lowComment && highComment && lowComment.id === highComment.id) ? [] : lowComment
-      return res.render('lessons/lesson', { teacher, highComment, checkedLowComment, avgComment })
+      const highComment = AllComment[0]
+      const lowComment = AllComment[AllComment.length - 1]
+      return res.render('lessons/lesson', { teacher, highComment, lowComment, avgComment })
     } catch (err) {
       next(err)
     }

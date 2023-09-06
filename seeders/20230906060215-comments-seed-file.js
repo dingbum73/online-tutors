@@ -24,7 +24,7 @@ module.exports = {
           const record = teacherRecords[i]
           comments.push({
             scores: Math.floor(Math.random() * 4) + 1,
-            text: faker.lorem.text(20),
+            text: faker.lorem.text(),
             teacher_id: record.teacher_id,
             user_id: record.user_id,
             created_at: new Date(),

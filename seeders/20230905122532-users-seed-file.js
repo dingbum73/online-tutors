@@ -22,7 +22,7 @@ module.exports = {
       created_at: new Date(),
       updated_at: new Date()
     }], {})
-    let users = Array.from({ length: 40 }).map(async () => {
+    let users = Array.from({ length: 30 }).map(async () => {
       const hashedPassword = await bcrypt.hash('12345678', 10)
       return {
         name: faker.name.findName(),

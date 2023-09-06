@@ -15,19 +15,21 @@ module.exports = {
       name: 'user1',
       email: 'user1@example.com',
       password: await bcrypt.hash('12345678', 10),
-      image: `https://loremflickr.com/150/150/happy,human/?random=${Math.random() * 100}`,
+      // image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,
+      image: 'https://i.imgur.com/lUVseMM.png',
       introduction: faker.lorem.text(),
       nation: faker.address.country(),
       created_at: new Date(),
       updated_at: new Date()
     }], {})
-    let users = Array.from({ length: 50 }).map(async () => {
+    let users = Array.from({ length: 40 }).map(async () => {
       const hashedPassword = await bcrypt.hash('12345678', 10)
       return {
         name: faker.name.findName(),
         email: faker.internet.exampleEmail(),
         password: hashedPassword,
-        image: `https://loremflickr.com/150/150/happy,human/?random=${Math.random() * 100}`,
+        // image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,
+        image: 'https://i.imgur.com/lUVseMM.png',
         introduction: faker.lorem.text(),
         nation: faker.address.country(),
         created_at: new Date(),

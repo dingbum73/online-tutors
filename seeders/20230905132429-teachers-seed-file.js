@@ -8,12 +8,13 @@ module.exports = {
     )
     const randomAppointment = ['[1, 2, 3]', '[1, 3, 5, 0]', '[2, 4, 6]', '[4, 5, 3]', '[6, 0]']
     await queryInterface.bulkInsert('Teachers',
-      Array.from({ length: 50 }, () => ({
+      Array.from({ length: 30 }, () => ({
         name: faker.name.findName(),
-        image: `https://loremflickr.com/150/150/happy,human/?random=${Math.random() * 100}`,
+        image: 'https://i.imgur.com/lUVseMM.png',
+        // image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,
         introduction: faker.lorem.text(),
         teaching_style: faker.lorem.text(),
-        during_time: Math.random() < 0.5 ? 30 : 30,
+        during_time: Math.random() < 0.5 ? 30 : 60,
         url: faker.internet.url(),
         appointment: randomAppointment[Math.floor(Math.random() * randomAppointment.length)],
         user_id: users[Math.floor(Math.random() * users.length)].id,

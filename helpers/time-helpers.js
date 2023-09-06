@@ -101,6 +101,7 @@ const calculate = (appointment, madeAppointment, duringTime) => {
 
 module.exports = {
   currentTaipeiTime,
+  openLessonDay,
   calculate,
   deDuplicate,
   isBooking,

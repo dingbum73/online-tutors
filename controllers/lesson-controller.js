@@ -1,20 +1,28 @@
 const { User, Teacher, Record, Comment } = require('../models')
-const { calculate, isBooking, isRepeat, isOpen } = require('../helpers/time-helpers')
+const { calculate, isBooking, isRepeat, isOpen, currentTaipeiTime } = require('../helpers/time-helpers')
+const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const { rankIndex } = require('../helpers/rank-helpers')
 const { Op, Sequelize } = require('sequelize')
 
 const lessonController = {
   getLessons: async (req, res, next) => {
     try {
-      const [teachers, ranks] = await Promise.all([
-        Teacher.findAll({
+      const today = currentTaipeiTime()
+      const DEFAULT_LIMIT = 9
+      const page = Number(req.query.page) || 1
+      const limit = Number(req.query.limit) || DEFAULT_LIMIT
+      const offset = getOffset(limit, page)
+      const [findTeachers, ranks] = await Promise.all([
+        Teacher.findAndCountAll({
           include: [{ model: User, as: 'isUser' }],
+          limit,
+          offset,
           raw: true,
           nest: true
         }),
         Record.findAll({
           where: {
-            startDate: { [Op.lt]: new Date() }
+            startDate: { [Op.lt]: today }
           },
           include: [{ model: User, attributes: ['name', 'image'] }],
           attributes: [
@@ -30,8 +38,12 @@ const lessonController = {
           nest: true
         })
       ])
+      const teachers = findTeachers.rows.map(r => ({
+        ...r,
+        introduction: r.introduction.substring(0, 50)
+      }))
       const ranksIndex = rankIndex(ranks)
-      return res.render('index', { teachers, ranksIndex })
+      return res.render('index', { teachers, ranksIndex, pagination: getPagination(limit, page, teachers.count) })
     } catch (err) {
       next(err)
     }
@@ -39,7 +51,7 @@ const lessonController = {
   getLesson: async (req, res, next) => {
     try {
       const { id } = req.params
-      const [teacher, findAppointment, AllComment, avgComment] = await Promise.all([
+      const [teacher, findAppointment, allComment, avgComment] = await Promise.all([
         Teacher.findByPk(id, {
           include: [{ model: User, as: 'isUser' }],
           raw: true,
@@ -67,8 +79,8 @@ const lessonController = {
       }
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       teacher.selection = calculate(teacher.appointment, madeAppointment, teacher.duringTime)
-      const highComment = AllComment[0]
-      const lowComment = AllComment[AllComment.length - 1]
+      const highComment = allComment[0]
+      const lowComment = allComment[allComment.length - 1]
       return res.render('lessons/lesson', { teacher, highComment, lowComment, avgComment })
     } catch (err) {
       next(err)

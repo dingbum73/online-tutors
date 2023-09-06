@@ -28,12 +28,9 @@ router.delete('/records/:id', authenticated, lessonController.delAppointment)
 
 router.get('/comments/:teacherId', authenticated, commentController.getCommentScore)
 router.post('/comments', authenticated, commentController.postCommentScore)
-// router.get('/comments', authenticated, commentController.getComments)
-
-router.get('/', authenticated, lessonController.getLessons)
-
+router.get('/lessons', authenticated, lessonController.getLessons)
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/signin', failureFlash: true }), userController.signIn)
-router.get('/', (req, res) => res.redirect('index'))
+router.get('/', (req, res) => res.redirect('/lessons'))
 router.use('/', generalErrorHandler)
 
 module.exports = router

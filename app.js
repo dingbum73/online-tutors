@@ -11,11 +11,12 @@ const flash = require('connect-flash')
 const session = require('express-session')
 const passport = require('./config/passport')
 const { getUser } = require('./helpers/auth-helpers')
+const handlebarsHelpers = require('./helpers/handlebars-helpers')
 
 const app = express()
 const port = process.env.PORT
 
-app.engine('hbs', exphbs.create({ defaultLayout: 'main', extname: '.hbs' }).engine)
+app.engine('hbs', exphbs.create({ defaultLayout: 'main', extname: '.hbs', helpers: handlebarsHelpers }).engine)
 app.set('view engine', 'hbs')
 app.set('views', './views')
 

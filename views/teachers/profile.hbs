@@ -36,23 +36,16 @@
     </div>
     <div class="card-body d-flex-inline">
       <h5>Recent Reviewed</h5>
-      {{#if highComment}}
+      {{#if allComment}}
+      {{#each allComment}}
       <p>
         <span class="badge rounded-pill bg-warning font-weight-normal">
-          {{highComment.scores}}
+          {{this.scores}}
           <i class="fas fa-star fa-xs"></i>
         </span>
-        {{highComment.text}}
+        {{this.text}}
       </p>
-      {{/if}}
-      {{#if lowComment}}
-      <p>
-        <span class="badge rounded-pill bg-warning font-weight-normal">
-          {{lowComment.scores}}
-          <i class="fas fa-star fa-xs"></i>
-        </span>
-        {{lowComment.text}}
-      </p>
+      {{/each}}
       {{/if}}
     </div>
   </div>

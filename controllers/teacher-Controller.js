@@ -37,7 +37,7 @@ const teacherController = {
       })
       if (!teacher) throw new Error('此用戶不存在')
       const teacherId = teacher.id
-      const [findNewRecords, AllComment, avgComment] = await Promise.all([
+      const [findNewRecords, allComment, avgComment] = await Promise.all([
         Record.findAll({
           where: {
             teacherId,
@@ -60,13 +60,9 @@ const teacherController = {
           raw: true
         })
       ])
-
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      const highComment = AllComment[0]
-      const lowComment = AllComment[AllComment.length - 1]
-      console.log('teachers/profile/AllComment', AllComment)
-      res.render('teachers/profile', { teacher, newRecords, highComment, lowComment, avgComment })
+      res.render('teachers/profile', { teacher, newRecords, allComment, avgComment })
     } catch (err) {
       next(err)
     }

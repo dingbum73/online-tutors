@@ -11,10 +11,10 @@ module.exports = {
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
     const alreadyHaveRecords = await queryInterface.sequelize.query(
-      'SELECT distinct user_id FROM Records WHERE start_date < :todayDate',
+      'SELECT user_id,count(id) FROM Records WHERE start_date < ? GROUP BY user_id HAVING count(id) > ?',
       {
         type: queryInterface.sequelize.QueryTypes.SELECT,
-        replacements: { todayDate: today }
+        replacements: [today, 1]
       }
     )
     const alreadyHaveUserId = alreadyHaveRecords.map(r => r.user_id)
@@ -29,7 +29,7 @@ module.exports = {
     const records = []
     if (users) {
       // 舊紀錄：先找出不重複的User
-      function getRandomTeacherExcluding(usedTeachers, userId) {
+      function getRandomTeacherExcluding (usedTeachers, userId) {
         let selectedTeacher
         do {
           selectedTeacher = teachers[Math.floor(Math.random() * teachers.length)]

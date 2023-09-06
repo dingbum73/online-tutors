@@ -30,19 +30,26 @@
         <div class="mb-3">
           <fieldset>
             <legend>開放預約</legend>
-            <input type="checkbox" id="MON" name="appointment" value="1" />
+            <input type="checkbox" id="MON" name="appointment" value="1" {{#ifCondinArray 1
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="MON" class="mb-2">MON</label>
-            <input type="checkbox" id="TUE" name="appointment" value="2" />
+            <input type="checkbox" id="TUE" name="appointment" value="2" {{#ifCondinArray 2
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="TUE" class="mb-2">TUE</label>
-            <input type="checkbox" id="WED" name="appointment" value="3" />
+            <input type="checkbox" id="WED" name="appointment" value="3" {{#ifCondinArray 3
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="WED" class="mb-2">WED</label>
-            <input type="checkbox" id="THU" name="appointment" value="4" />
+            <input type="checkbox" id="THU" name="appointment" value="4" {{#ifCondinArray 4
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="THU" class="mb-2">THU</label>
-            <input type="checkbox" id="FRI" name="appointment" value="5" />
+            <input type="checkbox" id="FRI" name="appointment" value="5" {{#ifCondinArray 5
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="FRI" class="mb-2">FRI</label>
-            <input type="checkbox" id="SAT" name="appointment" value="6" />
+            <input type="checkbox" id="SAT" name="appointment" value="6" {{#ifCondinArray 6
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="SAT" class="mb-2">SAT</label>
-            <input type="checkbox" id="SUN" name="appointment" value="0" />
+            <input type="checkbox" id="SUN" name="appointment" value="0" {{#ifCondinArray 0
+              teacher.appointment}}checked{{/ifCondinArray}} />
             <label for="SUN" class="mb-2">SUN</label>
           </fieldset>
         </div>

@@ -32,39 +32,25 @@ module.exports = {
         })
       }
     }
-    // 舊紀錄
-    const usersHalfa = users.slice(0, Math.floor((users.length / 2)))
-    const usersHalfb = users.slice(Math.floor((users.length / 2)), users.length)
-    for (const r of usersHalfa) {
-      for (let i = 0; i <= 4; i++) {
-        const t = teachers[Math.floor(Math.random() * teachers.length)]
-        let userId
-        do {
-          userId = users[Math.floor(Math.random() * users.length)].id
-        } while (userId === t.user_id)
-        const lessonDay = openLessonDay(t.appointment, t.during_time)
-        const randomNum = (Math.floor(Math.random() * 15) + 14)
-        const pastDay = dayjs(lessonDay[i]).subtract(randomNum, 'day').format('YYYY-MM-DD HH:mm:ss')
-        records.push({
-          user_id: r.id,
-          teacher_id: t.id,
-          start_date: pastDay,
-          during_time: t.during_time,
-          created_at: new Date(),
-          updated_at: new Date()
-        })
-      }
+    // 舊紀錄：先找出不重複的Teacher
+    function getRandomTeacherExcluding (usedTeachers) {
+      let selectedTeacher
+      do {
+        selectedTeacher = teachers[Math.floor(Math.random() * teachers.length)]
+      } while (usedTeachers.includes(selectedTeacher.id))
+      return selectedTeacher
     }
-    for (const r of usersHalfb) {
-      for (let i = 0; i <= 4; i++) {
-        const t = teachers[Math.floor(Math.random() * teachers.length)]
-        let userId
-        do {
-          userId = users[Math.floor(Math.random() * users.length)].id
-        } while (userId === t.user_id)
+
+    for (const r of users) {
+      const usedTeachers = []
+      for (let i = 0; i < 4; i++) {
+        const t = getRandomTeacherExcluding(usedTeachers)
+        usedTeachers.push(t.id)
+
         const lessonDay = openLessonDay(t.appointment, t.during_time)
-        const randomNum = (Math.floor(Math.random() * 15) + 30)
+        const randomNum = Math.floor(Math.random() * 15) + 30
         const pastDay = dayjs(lessonDay[i]).subtract(randomNum, 'day').format('YYYY-MM-DD HH:mm:ss')
+
         records.push({
           user_id: r.id,
           teacher_id: t.id,

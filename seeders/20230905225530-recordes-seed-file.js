@@ -33,18 +33,19 @@ module.exports = {
       }
     }
     // 舊紀錄：先找出不重複的User
-    function getRandomUserExcluding (usedUsers) {
+    function getRandomUserExcluding (usedUsers, userId) {
       let selectedUser
       do {
         selectedUser = users[Math.floor(Math.random() * users.length)]
-      } while (usedUsers.includes(selectedUser.id))
+      } while (usedUsers.includes(selectedUser.id) || selectedUser.id === userId)
       return selectedUser
     }
 
     for (const t of teachers) {
       const usedUsers = []
+      usedUsers.push(t.user_id)
       for (let i = 0; i < 4; i++) {
-        const user = getRandomUserExcluding(usedUsers)
+        const user = getRandomUserExcluding(usedUsers, t.user_id)
         usedUsers.push(user.id)
 
         const lessonDay = openLessonDay(t.appointment, t.during_time)

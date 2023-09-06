@@ -29,18 +29,18 @@ module.exports = {
     const records = []
     if (users) {
       // 舊紀錄：先找出不重複的User
-      function getRandomTeacherExcluding (usedTeachers) {
+      function getRandomTeacherExcluding(usedTeachers, userId) {
         let selectedTeacher
         do {
           selectedTeacher = teachers[Math.floor(Math.random() * teachers.length)]
-        } while (usedTeachers.includes(selectedTeacher.id))
+        } while (usedTeachers.includes(selectedTeacher.id) || selectedTeacher.user_id === userId)
         return selectedTeacher
       }
 
       for (const user of users) {
         const usedTeachers = []
         for (let i = 0; i < 2; i++) {
-          const teacher = getRandomTeacherExcluding(usedTeachers)
+          const teacher = getRandomTeacherExcluding(usedTeachers, user.id)
           usedTeachers.push(teacher.id)
 
           const lessonDay = openLessonDay(teacher.appointment, teacher.during_time)

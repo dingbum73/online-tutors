@@ -43,7 +43,7 @@ const lessonController = {
         introduction: r.introduction.substring(0, 50)
       }))
       const ranksIndex = rankIndex(ranks)
-      return res.render('index', { teachers, ranksIndex, pagination: getPagination(limit, page, teachers.count) })
+      return res.render('index', { teachers, ranksIndex, pagination: getPagination(limit, page, findTeachers.count) })
     } catch (err) {
       next(err)
     }

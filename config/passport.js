@@ -1,5 +1,6 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local')
+const GoogleStrategy = require('passport-google-oauth20').Strategy
 const bcrypt = require('bcryptjs')
 const { User, Teacher } = require('../models')
 const { Model } = require('sequelize')
@@ -19,6 +20,27 @@ passport.use(new LocalStrategy({
     return cb(err)
   }
 }))
+
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: process.env.GOOGLE_CALLBACK
+}, async (accessToken, refreshToken, profile, cb) => {
+  try {
+    const { email, name } = profile._json
+    const user = await User.findOne({ where: { email } })
+    if (user) return cb(null, user)
+
+    const randomPassword = Math.random().toString(36).slice(-8)
+    const salt = await bcrypt.genSalt(10)
+    const hash = await bcrypt.hash(randomPassword, salt)
+    const newUser = await User.create({ name, email, password: hash })
+    return cb(null, newUser)
+  } catch (err) {
+    return cb(err)
+  }
+}
+))
 
 passport.serializeUser((user, cb) => { cb(null, user.id) })
 passport.deserializeUser(async (id, cb) => {

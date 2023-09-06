@@ -9,15 +9,18 @@
       {{#if user}}
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/users/{{user.id}}"> {{user.name}} </a>
+          <a class="nav-link {{#ifCond route 'userProfile'}}active{{/ifCond}}" aria-current="page"
+            href="/users/{{user.id}}">
+            {{user.name}} </a>
         </li>
         {{#if user.isTeacher}}
         <li class="nav-item">
-          <a class="nav-link" href="/teachers/{{user.isTeacher.id}}">老師</a>
+          <a class="nav-link {{#ifCond route 'teacherProfile'}}active{{/ifCond}}"
+            href="/teachers/{{user.isTeacher.id}}">老師</a>
         </li>
         {{else}}
         <li class="nav-item">
-          <a class="nav-link" href="/teachers/join">成為老師</a>
+          <a class="nav-link  {{#ifCond route 'teacherForm'}}active{{/ifCond}}" href="/teachers/join">成為老師</a>
         </li>
         {{/if}}
       </ul>

@@ -25,8 +25,9 @@
       <div class="d-flex overflow-auto " style="max-width: 1000px ">
         {{#each newRecords}}
         <div class="border border-4 m-1 p-2" style="min-width: 250px ;min-height: 100px;">
+          <img class="rounded-circle" src="{{this.Teacher.image}}" style="width: 50px ;height: 50px;"
+            alt="this.Teacher.image"><strong>{{this.Teacher.name}}</strong>
           <p>上課時間：{{this.startDate}}</p>
-          <p>老師名字：{{this.Teacher.name}}</p>
           <p>上課網址：{{this.Teacher.url}}</p>
           <form action="/records/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
             <button type="submit" class="btn btn btn-danger btn-sm"
@@ -47,7 +48,7 @@
         <div class="border border-4 m-1 p-2" style="min-width: 250px ;min-height: 100px;">
           <img class="rounded-circle" src="{{this.Teacher.image}}" style="width: 50px ;height: 50px;"
             alt="this.Teacher.image">
-          <p>老師名字：{{this.Teacher.name}}</p>
+          <strong>{{this.Teacher.name}}</strong>
           <button type="button" class="btn btn btn-primary btn-sm" data-bs-toggle="modal" data-teacher-id="{{this.id}}"
             data-bs-target="#scoreModal">Score</button>
         </div>

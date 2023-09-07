@@ -26,6 +26,10 @@ module.exports = {
       nation: {
         type: Sequelize.TEXT
       },
+      is_admin: {
+        default: 0,
+        type: Sequelize.BOOLEAN
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE

@@ -2,9 +2,10 @@
 const faker = require('faker')
 module.exports = {
   up: async (queryInterface, Sequelize) => {
+    const root = 'root@example.com'
     const users = await queryInterface.sequelize.query(
-      'SELECT id FROM Users;',
-      { type: queryInterface.sequelize.QueryTypes.SELECT }
+      'SELECT id FROM Users WHERE email not in (:email) ;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT, replacements: { email: root } }
     )
     const randomAppointment = ['[1, 2, 3]', '[1, 3, 5, 0]', '[2, 4, 6]', '[4, 5, 3]', '[1,6, 0]']
     await queryInterface.bulkInsert('Teachers',

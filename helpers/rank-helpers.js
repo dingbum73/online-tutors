@@ -10,7 +10,6 @@ const rankIndex = array => {
 const myRank = (userId, allRank) => {
   const ranks = rankIndex(allRank)
   const result = ranks.find(r => r.user_id === userId)
-  console.log(result)
   if (result) {
     return result.rank
   } else {

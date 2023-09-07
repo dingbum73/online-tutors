@@ -1,63 +1,53 @@
 'use strict'
-const { currentTaipeiTime, openLessonDay } = require('../helpers/time-helpers')
+const { openLessonDay } = require('../helpers/time-helpers')
 const dayjs = require('dayjs')
 
-// 剩餘USERS若是無過往上課紀錄，會被撈取到
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    const today = currentTaipeiTime()
+    const comments = await queryInterface.sequelize.query(
+      'SELECT MIN(id) as id, user_id, teacher_id FROM Comments GROUP BY user_id, teacher_id',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
+    )
     const teachers = await queryInterface.sequelize.query(
       'SELECT id,during_time,appointment,user_id FROM Teachers;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    const alreadyHaveRecords = await queryInterface.sequelize.query(
-      'SELECT user_id,count(id) FROM Records WHERE start_date < ? GROUP BY user_id HAVING count(id) > ?',
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-        replacements: [today, 1]
-      }
-    )
-    const alreadyHaveUserId = alreadyHaveRecords.map(r => r.user_id)
-
     const users = await queryInterface.sequelize.query(
-      'SELECT id FROM Users WHERE id NOT IN (:userId)',
-      {
-        type: queryInterface.sequelize.QueryTypes.SELECT,
-        replacements: { userId: alreadyHaveUserId }
-      }
+      'SELECT id FROM Users;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
     const records = []
-    if (users) {
-      // 舊紀錄：先找出不重複的User
-      function getRandomTeacherExcluding (usedTeachers, userId) {
-        let selectedTeacher
-        do {
-          selectedTeacher = teachers[Math.floor(Math.random() * teachers.length)]
-        } while (usedTeachers.includes(selectedTeacher.id) || selectedTeacher.user_id === userId)
-        return selectedTeacher
-      }
 
-      for (const user of users) {
-        const usedTeachers = []
-        for (let i = 0; i < 2; i++) {
-          const teacher = getRandomTeacherExcluding(usedTeachers, user.id)
-          usedTeachers.push(teacher.id)
+    function getRandomTeacherExcluding(usedTeachers, userId) {
+      let selectedTeachers
+      do {
+        selectedTeachers = teachers[Math.floor(Math.random() * teachers.length)]
+      } while (usedTeachers.includes(selectedTeachers.id) || selectedTeachers.user_id === userId)
+      return selectedTeachers
+    }
+    // 舊紀錄
 
-          const lessonDay = openLessonDay(teacher.appointment, teacher.during_time)
-          const randomNum = Math.floor(Math.random() * 15) + 30
-          const pastDay = dayjs(lessonDay[lessonDay.length - 1 - i]).subtract(randomNum, 'day').format('YYYY-MM-DD HH:mm:ss')
+    let count = 1
+    for (const user of users) {
+      count++
+      const usedTeachers = comments.filter(m => m.user_id === user.id).map(m => m.teacher_id)
+      for (let i = 0; i < 2; i++) {
+        const teacher = getRandomTeacherExcluding(usedTeachers, user.id)
+        usedTeachers.push(teacher.id)
+        const lessonDay = openLessonDay(teacher.appointment, teacher.during_time)
+        const pastDay = dayjs(lessonDay[i]).subtract(7 * count, 'day').format('YYYY-MM-DD HH:mm:ss')
 
-          records.push({
-            user_id: user.id,
-            teacher_id: teacher.id,
-            start_date: pastDay,
-            during_time: teacher.during_time,
-            created_at: new Date(),
-            updated_at: new Date()
-          })
-        }
+        records.push({
+          user_id: user.id,
+          teacher_id: teacher.id,
+          start_date: pastDay,
+          during_time: teacher.during_time,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
       }
     }
+
     await queryInterface.bulkInsert('Records', records)
   },
 

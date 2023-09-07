@@ -62,7 +62,6 @@ const userController = {
           where: {
             userId: id,
             startDate: { [Op.gte]: today }
-            // startDate: { [Op.gte]: new Date() }
           },
           include: { model: Teacher },
           raw: true,
@@ -97,7 +96,7 @@ const userController = {
       if (!user) throw new Error('此用戶不存在')
       const hasCommentIds = findComments.map(comment => comment.id) // 先找出userId所有已評論過的teacherId
       // 找出舊紀錄中不包含已評論過的老師
-      const findOldRecords = await Record.findAll({
+      const findOldRecordsWithout = await Record.findAll({
         where: {
           userId: id,
           startDate: { [Op.lt]: today },
@@ -105,18 +104,18 @@ const userController = {
             [Op.notIn]: hasCommentIds
           }
         },
-        include: { model: Teacher },
+        attributes: [
+          [Sequelize.fn('DISTINCT', Sequelize.col('teacher_id')), 'id']
+        ],
+        include: { model: Teacher, attributes: ['name', 'image'] },
         raw: true,
         nest: true
       })
+
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      const oldRecords = findOldRecords.map(r => ({ ...r.Teacher })) // 找出舊紀錄所有課程
-      const uniqueRecords = oldRecords.filter((value, index, self) =>
-        self.findIndex(t => t.id === value.id) === index
-      )// 舊紀錄去重複
       const myRankData = myRank(id, allRanks)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
-      return res.render('users/profile', { user, newRecords, uniqueRecords, myRankData })
+      return res.render('users/profile', { user, newRecords, findOldRecordsWithout, myRankData })
     } catch (err) {
       next(err)
     }

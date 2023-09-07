@@ -13,27 +13,8 @@ module.exports = {
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
     const records = []
-    // 未來紀錄
-    for (const t of teachers) {
-      const lessonDay = openLessonDay(t.appointment, t.during_time)
-      for (let i = 0; i <= 1; i++) {
-        let userId
-        do {
-          userId = users[Math.floor(Math.random() * users.length)].id
-        } while (userId === t.user_id)
 
-        records.push({
-          user_id: userId,
-          teacher_id: t.id,
-          start_date: lessonDay[i],
-          during_time: t.during_time,
-          created_at: new Date(),
-          updated_at: new Date()
-        })
-      }
-    }
-    // 舊紀錄：先找出不重複的User
-    function getRandomUserExcluding (usedUsers, userId) {
+    function getRandomUserExcluding(usedUsers, userId) {
       let selectedUser
       do {
         selectedUser = users[Math.floor(Math.random() * users.length)]
@@ -41,16 +22,36 @@ module.exports = {
       return selectedUser
     }
 
+    // 未來紀錄
     for (const t of teachers) {
       const usedUsers = []
       usedUsers.push(t.user_id)
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 3; i++) {
+        const user = getRandomUserExcluding(usedUsers, t.user_id)
+        usedUsers.push(user.id)
+        const lessonDay = openLessonDay(t.appointment, t.during_time)
+        records.push({
+          user_id: user.id,
+          teacher_id: t.id,
+          start_date: lessonDay[i + 1],
+          during_time: t.during_time,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+      }
+    }
+    // 舊紀錄
+    let count = 0
+    for (const t of teachers) {
+      count++
+      const usedUsers = []
+      usedUsers.push(t.user_id)
+      for (let i = 0; i < 2; i++) {
         const user = getRandomUserExcluding(usedUsers, t.user_id)
         usedUsers.push(user.id)
 
         const lessonDay = openLessonDay(t.appointment, t.during_time)
-        const randomNum = Math.floor(Math.random() * 15) + 30
-        const pastDay = dayjs(lessonDay[i]).subtract(randomNum, 'day').format('YYYY-MM-DD HH:mm:ss')
+        const pastDay = dayjs(lessonDay[i]).subtract(7 + count, 'day').format('YYYY-MM-DD HH:mm:ss')
 
         records.push({
           user_id: user.id,

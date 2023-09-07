@@ -16,7 +16,7 @@
         {{#if user.isTeacher}}
         <li class="nav-item">
           <a class="nav-link {{#ifCond route 'teacherProfile'}}active{{/ifCond}}"
-            href="/teachers/{{user.isTeacher.id}}">老師</a>
+            href="/teachers/{{user.isTeacher.id}}">{{user.isTeacher.name}}老師</a>
         </li>
         {{else}}
         <li class="nav-item">

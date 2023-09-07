@@ -16,6 +16,8 @@ const teacherController = {
       if (parseInt(duringTime) !== 30 && parseInt(duringTime) !== 60) throw new Error('只能填寫30分或60分')
       const user = await Teacher.findOne({ where: { userId: id } })
       if (user) throw new Error('已經有老師身分了')
+      const postUrl = await Teacher.findOne({ where: { url } })
+      if (postUrl) throw new Error('網址已被使用')
       await Teacher.create({
         name, introduction, teachingStyle, duringTime, url, appointment, image, userId: id
       })
@@ -96,6 +98,8 @@ const teacherController = {
     try {
       const teacher = await Teacher.findOne({ where: { userId: id } })
       if (!teacher) throw new Error('此用戶不存在')
+      const postUrl = await Teacher.findOne({ where: { url } })
+      if (postUrl) throw new Error('網址已被使用')
       const filePath = await imgurFileHandler(file)
       await teacher.update({
         name: name || teacher.name,

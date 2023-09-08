@@ -21,7 +21,6 @@ const commentController = {
       if (!scores || !text) return res.json({ status: 'error', info: '分數與評論都需填寫' })
       if (parseInt(scores) > 5 || parseInt(scores) < 1) return res.json({ status: 'error', info: '請填寫1~5分' })
       const record = await Record.findAll({ where: { teacherId, userId: id, startDate: { [Op.lt]: new Date() } }, raw: true })
-      console.log('postCommentScore', record)
       if (record.length === 0) return res.json({ status: 'error', info: '未上過此課程' })
       const newComment = await Comment.create({
         scores,

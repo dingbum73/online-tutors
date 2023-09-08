@@ -25,7 +25,7 @@ const adminController = {
       })
       const users = findAllUsers.rows.map(user => ({
         ...user,
-        introduction: user.introduction.substring(0, 50) + '....'
+        introduction: user.introduction && user.introduction.length ? `${user.introduction.substring(0, 50)}....` : ''
       }))
       res.render('admin/index', { users, pagination: getPagination(limit, page, findAllUsers.count) })
     } catch (err) {

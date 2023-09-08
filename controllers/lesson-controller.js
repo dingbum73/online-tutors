@@ -40,7 +40,7 @@ const lessonController = {
       ])
       const teachers = findTeachers.rows.map(r => ({
         ...r,
-        introduction: r.introduction.substring(0, 50)
+        introduction: r.introduction && r.introduction.length ? `${r.introduction.substring(0, 50)}...` : ''
       }))
       const ranksIndex = rankIndex(ranks)
       return res.render('index', { teachers, ranksIndex, pagination: getPagination(limit, page, findTeachers.count) })

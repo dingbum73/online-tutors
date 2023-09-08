@@ -12,7 +12,7 @@ const adminController = {
 
   adminGetUsers: async (req, res, next) => {
     try {
-      const DEFAULT_LIMIT = 9
+      const DEFAULT_LIMIT = 10
       const page = Number(req.query.page) || 1
       const limit = Number(req.query.limit) || DEFAULT_LIMIT
       const offset = getOffset(limit, page)
@@ -25,7 +25,7 @@ const adminController = {
       })
       const users = findAllUsers.rows.map(user => ({
         ...user,
-        introduction: user.introduction.substring(0, 50)
+        introduction: user.introduction.substring(0, 50) + '....'
       }))
       res.render('admin/index', { users, pagination: getPagination(limit, page, findAllUsers.count) })
     } catch (err) {

@@ -50,13 +50,43 @@ const searchController = {
         introduction: r.introduction.substring(0, 50)
       }))
       const ranksIndex = rankIndex(ranks)
-
-      console.log('teachers', teachers)
-      console.log(' teachers.count', teachers.count)
       if (teachers.length) {
         return res.render('index', { teachers, ranksIndex, pagination: getPagination(limit, page, findTeachers.count), keyword })
       } else {
         return res.redirect('/')
+      }
+    } catch (err) {
+      next(err)
+    }
+  },
+  adminGetUsers: async (req, res, next) => {
+    try {
+      const keyword = req.query.keyword.trim()
+      const DEFAULT_LIMIT = 9
+      const page = Number(req.query.page) || 1
+      const limit = Number(req.query.limit) || DEFAULT_LIMIT
+      const offset = getOffset(limit, page)
+      const findAllUsers = await User.findAndCountAll({
+        where: {
+          [Op.or]: [
+            { name: { [Op.substring]: keyword } },
+            { introduction: { [Op.substring]: keyword } }
+          ]
+        },
+        include: { model: Teacher, as: 'isTeacher' },
+        limit,
+        offset,
+        raw: true,
+        nest: true
+      })
+      const users = findAllUsers.rows.map(user => ({
+        ...user,
+        introduction: user.introduction.substring(0, 50)
+      }))
+      if (users.length) {
+        res.render('admin/index', { users, pagination: getPagination(limit, page, findAllUsers.count), keyword })
+      } else {
+        res.redirect('/')
       }
     } catch (err) {
       next(err)

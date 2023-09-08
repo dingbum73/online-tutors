@@ -15,6 +15,7 @@ passport.use('localStrategylocal', new LocalStrategy({
     if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+    user.strategy = 'localStrategylocal'
     return cb(null, user)
   } catch (err) {
     return cb(err)
@@ -31,6 +32,7 @@ passport.use('localStrategyAdmin', new LocalStrategy({
     if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+    user.strategy = 'localStrategyAdmin'
     return cb(null, user)
   } catch (err) {
     return cb(err)
@@ -58,26 +60,27 @@ passport.use(new GoogleStrategy({
 }
 ))
 
-passport.serializeUser((user, cb) => { cb(null, user.email) })
-passport.deserializeUser(async (email, cb) => {
+// passport.serializeUser((user, cb) => { cb(null, user.id) })
+passport.serializeUser((user, cb) => { cb(null, { id: user.id, strategy: user.strategy }) })
+passport.deserializeUser(async (data, cb) => {
   try {
-    let user = await User.findOne({
-      where: { email },
-      include: [{ model: Teacher, as: 'isTeacher' }]
-    })
-    if (user) {
-      user = user.toJSON()
-      user.strategy = 'localStrategylocal'
-      return cb(null, user)
+    if (data.strategy === 'localStrategylocal') {
+      const user = await User.findByPk(data.id, {
+        include: [{ model: Teacher, as: 'isTeacher' }]
+      })
+      if (user) {
+        const result = user.toJSON()
+        result.strategy = 'localStrategylocal'
+        return cb(null, result)
+      }
+    } else if (data.strategy === 'localStrategyAdmin') {
+      const admin = await Admin.findByPk(data.id)
+      if (admin) {
+        const result = admin.toJSON()
+        result.strategy = 'localStrategyAdmin'
+        return cb(null, result)
+      }
     }
-
-    let admin = await Admin.findOne({ where: { email } })
-    if (admin) {
-      admin = admin.toJSON()
-      admin.strategy = 'localStrategyAdmin'
-      return cb(null, admin)
-    }
-
     cb(new Error('User not found'))
   } catch (err) {
     cb(err, null)
@@ -97,3 +100,28 @@ passport.deserializeUser(async (email, cb) => {
 // })
 
 module.exports = passport
+
+// passport.deserializeUser(async (email, cb) => {
+//   try {
+//     let user = await User.findOne({
+//       where: { email },
+//       include: [{ model: Teacher, as: 'isTeacher' }]
+//     })
+//     if (user) {
+//       user = user.toJSON()
+//       user.strategy = 'localStrategylocal'
+//       return cb(null, user)
+//     }
+
+//     let admin = await Admin.findOne({ where: { email } })
+//     if (admin) {
+//       admin = admin.toJSON()
+//       admin.strategy = 'localStrategyAdmin'
+//       return cb(null, admin)
+//     }
+
+//     cb(new Error('User not found'))
+//   } catch (err) {
+//     cb(err, null)
+//   }
+// })

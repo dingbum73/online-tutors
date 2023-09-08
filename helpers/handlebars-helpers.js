@@ -3,6 +3,6 @@ module.exports = {
     return a === b ? options.fn(this) : options.inverse(this)
   },
   ifCondinArray: function (a, array, options) {
-    return array.includes(parseInt(a)) ? options.fn(this) : options.inverse(this)
+    return array.includes(a) ? options.fn(this) : options.inverse(this)
   }
 }

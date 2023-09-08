@@ -115,6 +115,7 @@ const userController = {
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
       const myRankData = myRank(id, allRanks)
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
+      user.strategy = 'localStrategylocal'
       return res.render('users/profile', { user, newRecords, findOldRecordsWithout, myRankData })
     } catch (err) {
       next(err)
@@ -130,6 +131,7 @@ const userController = {
       })
       if (!user) throw new Error('此用戶不存在')
       user.isTeacher = user.isTeacher.id ? user.isTeacher : null
+      user.strategy = 'localStrategylocal'
       return res.render('users/edit-profile', { user })
     } catch (err) {
       next(err)

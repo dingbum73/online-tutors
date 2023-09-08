@@ -6,7 +6,7 @@ module.exports = {
       'SELECT id FROM Users ;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    const randomAppointment = ['[1, 2, 3]', '[1, 3, 5, 0]', '[2, 4, 6]', '[4, 5, 3]', '[1,6, 0]']
+    const randomAppointment = ['["1", "2", "3"]', '["1", "3", "5", "0"]', '["2", "4", "6"]', '["4", "5", "3"]', '["1","6", "0"]']
     await queryInterface.bulkInsert('Teachers',
       Array.from({ length: 20 }, (v, index) => ({
         name: faker.name.findName(),

@@ -4,7 +4,8 @@
     <img class="img-responsive center-block mb-5" src="{{teacher.image}}"
       style="width: 150px ;height: 150px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
     <h1>{{teacher.name}}</h1>
-    <P>{{user.nation}}</P>
+    <P>{{teacher.isUser.email}}</P>
+    <P>{{teacher.isUser.nation}}</P>
     {{#if avgComment.avgScores}}
     <span class="badge rounded-pill bg-warning font-weight-normal">
       {{avgComment.avgScores}}

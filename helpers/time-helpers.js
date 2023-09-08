@@ -10,6 +10,9 @@ dayjs.extend(timezone)
 const currentTaipeiTime = () => {
   return dayjs().tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
 }
+const currentTaipeiTimeAddSeven = () => {
+  return dayjs(currentTaipeiTime()).add(7, 'day').format('YYYY-MM-DD HH:mm:ss')
+}
 
 // 回傳日期、開始時間、結束時間
 const timeTools = (startDate, duringTime) => {
@@ -101,6 +104,7 @@ const calculate = (appointment, madeAppointment, duringTime) => {
 
 module.exports = {
   currentTaipeiTime,
+  currentTaipeiTimeAddSeven,
   openLessonDay,
   calculate,
   deDuplicate,

@@ -5,12 +5,17 @@
       style="width: 150px ;height: 150px; transition: opacity 0.5s; opacity:0;" onload="this.style.opacity=1;">
     <h1>{{teacher.name}}</h1>
     <P>{{teacher.isUser.email}}</P>
-    <P>{{teacher.isUser.nation}}</P>
-    {{#if avgComment.avgScores}}
-    <span class="badge rounded-pill bg-warning font-weight-normal">
-      {{avgComment.avgScores}}
+    <span class="badge rounded-pill bg-danger font-weight-normal">
+      {{teacher.isUser.nation}}
       <i class="fas fa-star fa-xs"></i>
     </span>
+    {{#if avgComment.avgScores}}
+    <div>
+      <span class="badge rounded-pill bg-warning font-weight-normal">
+        {{avgComment.avgScores}}
+        <i class="fas fa-star fa-xs"></i>
+      </span>
+    </div>
     {{/if}}
     <h4>About me</h4>
     <p>{{teacher.introduction}}</p>

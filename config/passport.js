@@ -60,7 +60,6 @@ passport.use(new GoogleStrategy({
 }
 ))
 
-// passport.serializeUser((user, cb) => { cb(null, user.id) })
 passport.serializeUser((user, cb) => { cb(null, { id: user.id, strategy: user.strategy }) })
 passport.deserializeUser(async (data, cb) => {
   try {
@@ -86,42 +85,5 @@ passport.deserializeUser(async (data, cb) => {
     cb(err, null)
   }
 })
-// passport.deserializeUser(async (id, cb) => {
-//   try {
-//     const user = await User.findByPk(id, {
-//       include: [
-//         { model: Teacher, as: 'isTeacher' }
-//       ]
-//     })
-//     cb(null, user.toJSON())
-//   } catch (err) {
-//     cb(err, null)
-//   }
-// })
 
 module.exports = passport
-
-// passport.deserializeUser(async (email, cb) => {
-//   try {
-//     let user = await User.findOne({
-//       where: { email },
-//       include: [{ model: Teacher, as: 'isTeacher' }]
-//     })
-//     if (user) {
-//       user = user.toJSON()
-//       user.strategy = 'localStrategylocal'
-//       return cb(null, user)
-//     }
-
-//     let admin = await Admin.findOne({ where: { email } })
-//     if (admin) {
-//       admin = admin.toJSON()
-//       admin.strategy = 'localStrategyAdmin'
-//       return cb(null, admin)
-//     }
-
-//     cb(new Error('User not found'))
-//   } catch (err) {
-//     cb(err, null)
-//   }
-// })

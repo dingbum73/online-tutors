@@ -8,6 +8,16 @@
           <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" value="{{user.name}}">
         </div>
         <div class="mb-3">
+          <label for="name" class="mb-2">Email<span class="required text-danger">*</label>
+          <input type="text" id="email" name="email" class="form-control" placeholder="{{user.email}}"
+            value="{{user.email}}">
+        </div>
+        <div class="mb-3">
+          <label for="password" class="mb-2">密碼<span class="required text-danger">*</label>
+          <input type="password" id="password" name="password" class="form-control" minlength="8"
+            placeholder="Enter Password at least 8 characters">
+        </div>
+        <div class="mb-3">
           <label for="nation" class="mb-2">國別</label>
           <input type="text" id="nation" name="nation" class="form-control" placeholder="Enter your country"
             value="{{user.nation}}">

@@ -139,15 +139,34 @@ const userController = {
   },
   putUser: async (req, res, next) => {
     const id = req.user.id
-    const { name, nation, introduction } = req.body
+    const { name, email, password, nation, introduction } = req.body
     const { file } = req
     try {
-      const user = await User.findByPk(id)
+      const [user, checkedEmail] = await Promise.all([
+        User.findByPk(id),
+        User.findOne({
+          where: {
+            email,
+            id: {
+              [Op.ne]: id
+            }
+          }
+        })
+      ])
       const filePath = await imgurFileHandler(file)
       if (!user) throw new Error('此用戶不存在')
+      if (checkedEmail) throw new Error('email已被使用')
+
+      let hash
+      if (password) {
+        hash = await bcrypt.hash(password, 10)
+      }
+
       await user.update({
         name: name || user.name,
-        nation,
+        email: email || user.email,
+        password: hash || user.password,
+        nation: nation || user.nation,
         introduction: introduction || user.introduction,
         image: filePath || user.image
       })

@@ -12,10 +12,10 @@ module.exports = {
       'SELECT id,during_time,appointment,user_id FROM Teachers;',
       { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
-    const root = 'root@example.com'
+
     const users = await queryInterface.sequelize.query(
-      'SELECT id FROM Users WHERE email not in (:email) ;',
-      { type: queryInterface.sequelize.QueryTypes.SELECT, replacements: { email: root } }
+      'SELECT id FROM Users ;',
+      { type: queryInterface.sequelize.QueryTypes.SELECT }
     )
     const records = []
 

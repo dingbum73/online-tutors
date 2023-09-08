@@ -2,16 +2,32 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local')
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const bcrypt = require('bcryptjs')
-const { User, Teacher } = require('../models')
+const { User, Teacher, Admin } = require('../models')
 const { Model } = require('sequelize')
 
-passport.use(new LocalStrategy({
+passport.use('localStrategylocal', new LocalStrategy({
   usernameField: 'email',
   passwordField: 'password',
   passReqToCallback: true
 }, async (req, email, password, cb) => {
   try {
     const user = await User.findOne({ where: { email } })
+    if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
+    return cb(null, user)
+  } catch (err) {
+    return cb(err)
+  }
+}))
+
+passport.use('localStrategyAdmin', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
+  passReqToCallback: true
+}, async (req, email, password, cb) => {
+  try {
+    const user = await Admin.findOne({ where: { email } })
     if (!user) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) return cb(null, false, req.flash('error_messages', '帳號或密碼輸入錯誤！'))
@@ -42,18 +58,42 @@ passport.use(new GoogleStrategy({
 }
 ))
 
-passport.serializeUser((user, cb) => { cb(null, user.id) })
-passport.deserializeUser(async (id, cb) => {
+passport.serializeUser((user, cb) => { cb(null, user.email) })
+passport.deserializeUser(async (email, cb) => {
   try {
-    const user = await User.findByPk(id, {
-      include: [
-        { model: Teacher, as: 'isTeacher' }
-      ]
+    let user = await User.findOne({
+      where: { email },
+      include: [{ model: Teacher, as: 'isTeacher' }]
     })
-    cb(null, user.toJSON())
+    if (user) {
+      user = user.toJSON()
+      user.strategy = 'localStrategylocal'
+      return cb(null, user)
+    }
+
+    let admin = await Admin.findOne({ where: { email } })
+    if (admin) {
+      admin = admin.toJSON()
+      admin.strategy = 'localStrategyAdmin'
+      return cb(null, admin)
+    }
+
+    cb(new Error('User not found'))
   } catch (err) {
     cb(err, null)
   }
 })
+// passport.deserializeUser(async (id, cb) => {
+//   try {
+//     const user = await User.findByPk(id, {
+//       include: [
+//         { model: Teacher, as: 'isTeacher' }
+//       ]
+//     })
+//     cb(null, user.toJSON())
+//   } catch (err) {
+//     cb(err, null)
+//   }
+// })
 
 module.exports = passport

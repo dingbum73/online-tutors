@@ -7,7 +7,14 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       {{#if user}}
+
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {{#ifCond user.strategy 'localStrategyAdmin'}}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/admin">使用者清單</a>
+        </li>
+        {{/ifCond}}
+        {{#ifCond user.strategy 'localStrategylocal'}}
         <li class="nav-item">
           <a class="nav-link {{#ifCond route 'userProfile'}}active{{/ifCond}}" aria-current="page"
             href="/users/{{user.id}}">
@@ -23,6 +30,7 @@
           <a class="nav-link  {{#ifCond route 'teacherForm'}}active{{/ifCond}}" href="/teachers/join">成為老師</a>
         </li>
         {{/if}}
+        {{/ifCond}}
       </ul>
     </div>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">

@@ -4,17 +4,14 @@ const faker = require('faker')
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert('Users', [{
+    await queryInterface.bulkInsert('Admins', [{
       name: 'root',
       email: 'root@example.com',
       password: await bcrypt.hash('12345678', 10),
-      image: null,
-      introduction: null,
-      nation: null,
-      is_admin: 1,
       created_at: new Date(),
       updated_at: new Date()
-    }, {
+    }], {})
+    await queryInterface.bulkInsert('Users', [{
       name: 'user1',
       email: 'user1@example.com',
       password: await bcrypt.hash('12345678', 10),
@@ -22,7 +19,6 @@ module.exports = {
       image: 'https://i.imgur.com/lUVseMM.png',
       introduction: faker.lorem.text(),
       nation: faker.address.country(),
-      is_admin: 0,
       created_at: new Date(),
       updated_at: new Date()
     }], {})
@@ -37,7 +33,6 @@ module.exports = {
         image: 'https://i.imgur.com/lUVseMM.png',
         introduction: faker.lorem.text(),
         nation: faker.address.country(),
-        is_admin: 0,
         created_at: new Date(),
         updated_at: new Date()
       }

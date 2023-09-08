@@ -7,7 +7,7 @@ const { Op, Sequelize } = require('sequelize')
 const searchController = {
   getLessons: async (req, res, next) => {
     try {
-      const keyword = req.query.keyword
+      const keyword = req.query.keyword.trim()
       const today = currentTaipeiTime()
       const DEFAULT_LIMIT = 9
       const page = Number(req.query.page) || 1

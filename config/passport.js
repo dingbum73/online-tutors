@@ -47,12 +47,15 @@ passport.use(new GoogleStrategy({
   try {
     const { email, name } = profile._json
     const user = await User.findOne({ where: { email } })
-    if (user) return cb(null, user)
-
+    if (user) {
+      user.strategy = 'localStrategylocal'
+      return cb(null, user)
+    }
     const randomPassword = Math.random().toString(36).slice(-8)
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(randomPassword, salt)
     const newUser = await User.create({ name, email, password: hash })
+    newUser.strategy = 'localStrategylocal'
     return cb(null, newUser)
   } catch (err) {
     return cb(err)

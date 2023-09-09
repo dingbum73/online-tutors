@@ -10,7 +10,8 @@ module.exports = {
     await queryInterface.bulkInsert('Teachers',
       Array.from({ length: 20 }, (v, index) => ({
         name: faker.name.findName(),
-        image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,
+        // image: `https://loremflickr.com/150/150/human/?random=${Math.random() * 100}`,
+        image: 'https://i.imgur.com/lUVseMM.png',
         introduction: faker.lorem.text(),
         teaching_style: faker.lorem.text(),
         during_time: Math.random() < 0.5 ? 30 : 60,

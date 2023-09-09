@@ -80,7 +80,6 @@ const teacherController = {
       ])
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-  
       res.render('teachers/profile', { teacher, allRecords, newRecords, allComment, avgComment })
     } catch (err) {
       next(err)

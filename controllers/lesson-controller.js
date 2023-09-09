@@ -1,5 +1,5 @@
 const { User, Teacher, Record, Comment } = require('../models')
-const { calculate, isBooking, isRepeat, isOpen, currentTaipeiTime } = require('../helpers/time-helpers')
+const { calculate, isBooking, isRepeat, isOpen, currentTaipeiTime, timeTools } = require('../helpers/time-helpers')
 const { getOffset, getPagination } = require('../helpers/pagination-helper')
 const { rankIndex } = require('../helpers/rank-helpers')
 const { Op, Sequelize } = require('sequelize')
@@ -113,11 +113,13 @@ const lessonController = {
       const repeated = isRepeat(appointment, teacher.duringTime, findRecords) // 預約選課時間是否重疊了
       if (checked) return res.json({ status: 'error', info: '已被搶先選走了' })
       if (repeated) return res.json({ status: 'error', info: '該時段已有預約課' })
+      const postRecord = timeTools(appointment, teacher.duringTime)
       // 創建新紀錄
       const createNewRecord = await Record.create({
         userId,
         teacherId: teacher.id,
         startDate: appointment,
+        endDate: postRecord.endTime,
         duringTime: teacher.duringTime
       })
       const newRecord = createNewRecord.toJSON()

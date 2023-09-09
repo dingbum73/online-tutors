@@ -1,5 +1,5 @@
 'use strict'
-const { openLessonDay } = require('../helpers/time-helpers')
+const { openLessonDay, timeTools } = require('../helpers/time-helpers')
 const dayjs = require('dayjs')
 
 module.exports = {
@@ -30,10 +30,12 @@ module.exports = {
         const user = getRandomUserExcluding(usedUsers, t.user_id)
         usedUsers.push(user.id)
         const lessonDay = openLessonDay(t.appointment, t.during_time)
+        const chooseLessonDay = timeTools(lessonDay[i + 1], t.during_time)
         records.push({
           user_id: user.id,
           teacher_id: t.id,
-          start_date: lessonDay[i + 1],
+          start_date: chooseLessonDay.startTime,
+          end_date: chooseLessonDay.endTime,
           during_time: t.during_time,
           created_at: new Date(),
           updated_at: new Date()
@@ -52,11 +54,12 @@ module.exports = {
 
         const lessonDay = openLessonDay(t.appointment, t.during_time)
         const pastDay = dayjs(lessonDay[i]).subtract(7 + count, 'day').format('YYYY-MM-DD HH:mm:ss')
-
+        const chooseLessonDay = timeTools(pastDay, t.during_time)
         records.push({
           user_id: user.id,
           teacher_id: t.id,
-          start_date: pastDay,
+          start_date: chooseLessonDay.startTime,
+          end_date: chooseLessonDay.endTime,
           during_time: t.during_time,
           created_at: new Date(),
           updated_at: new Date()

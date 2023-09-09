@@ -80,7 +80,7 @@ const lessonController = {
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       teacher.selection = calculate(teacher.appointment, madeAppointment, teacher.duringTime)
       const highComment = allComment[0]
-      const lowComment = allComment[allComment.length - 1]
+      const lowComment = allComment.length > 1 ? allComment[allComment.length - 1] : null
       return res.render('lessons/lesson', { teacher, highComment, lowComment, avgComment })
     } catch (err) {
       next(err)

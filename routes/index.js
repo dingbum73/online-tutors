@@ -40,7 +40,7 @@ router.delete('/records/:id', authenticated, lessonController.delAppointment)
 router.get('/comments/:teacherId', authenticated, commentController.getCommentScore)
 router.post('/comments', authenticated, commentController.postCommentScore)
 
-router.get('/', (req, res) => res.redirect('/lessons'))
+router.get('*', (req, res) => res.redirect('/lessons'))
 router.use('/', generalErrorHandler)
 
 module.exports = router

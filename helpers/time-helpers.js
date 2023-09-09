@@ -95,11 +95,18 @@ const isRepeat = (newAppointment, duringTime, findRecords) => {
   return false
 }
 
+// 加入(ddd)
+const resultAdd = result => result.map(dateStr => {
+  const day = dayjs(dateStr)
+  return day.format('YYYY-MM-DD(ddd)HH:mm:ss')
+})
+
 const calculate = (appointment, madeAppointment, duringTime) => {
   const madeAppointmentFilter = isLessonInFuture(madeAppointment)
   const newAppointmentFilter = openLessonDay(appointment, duringTime)
   const result = deDuplicate(newAppointmentFilter, madeAppointmentFilter)
-  return result
+  const finalResult = resultAdd(result)
+  return finalResult
 }
 
 module.exports = {

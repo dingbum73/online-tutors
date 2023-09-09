@@ -89,6 +89,7 @@ const lessonController = {
   postAppointment: async (req, res, next) => {
     const userId = req.user.id
     const { appointment, teacherId } = req.body
+    const appointmentSplit = appointment.replace(/\(Mon\)|\(Tue\)|\(Wed\)|\(Thu\)|\(Fri\)|\(Sat\)|\(Sun\)/, ' ')
     const id = teacherId
     try {
       const [teacher, findAppointment, findRecords] = await Promise.all([
@@ -99,32 +100,31 @@ const lessonController = {
       // 驗證前端回傳資料
       if (!teacher) throw new Error('此用戶不存在')
       if (teacher.userId === userId) return res.json({ status: 'error', info: '無法預約自己的課' })
-      if (!appointment) return res.json({ status: 'error', info: '請選擇時間' })
+      if (!appointmentSplit) return res.json({ status: 'error', info: '請選擇時間' })
       if (typeof (teacher.appointment) !== 'object') {
         const newArray = []
         newArray.push(teacher.appointment)
         teacher.appointment = newArray
       }
-      if (!isOpen(teacher.appointment, appointment)) return res.json({ status: 'error', info: '該時段未開放' })
+      if (!isOpen(teacher.appointment, appointmentSplit)) return res.json({ status: 'error', info: '該時段未開放' })
 
       // 確認條件是否正確
       const madeAppointment = findAppointment.map(a => a.startDate)
-      const checked = isBooking(appointment, madeAppointment) // 想要預約選課是否已被訂走
-      const repeated = isRepeat(appointment, teacher.duringTime, findRecords) // 預約選課時間是否重疊了
+      const checked = isBooking(appointmentSplit, madeAppointment) // 想要預約選課是否已被訂走
+      const repeated = isRepeat(appointmentSplit, teacher.duringTime, findRecords) // 預約選課時間是否重疊了
       if (checked) return res.json({ status: 'error', info: '已被搶先選走了' })
       if (repeated) return res.json({ status: 'error', info: '該時段已有預約課' })
-      const postRecord = timeTools(appointment, teacher.duringTime)
+      const postRecord = timeTools(appointmentSplit, teacher.duringTime)
       // 創建新紀錄
       const createNewRecord = await Record.create({
         userId,
         teacherId: teacher.id,
-        startDate: appointment,
+        startDate: appointmentSplit,
         endDate: postRecord.endTime,
         duringTime: teacher.duringTime
       })
       const newRecord = createNewRecord.toJSON()
       newRecord.url = teacher.url
-      console.log('newRecord', newRecord)
       return res.json(newRecord)
     } catch (err) {
       next(err)

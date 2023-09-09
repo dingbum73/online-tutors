@@ -1,6 +1,7 @@
+const bcrypt = require('bcryptjs')
 const { Teacher, Record, User, Comment } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
-const { currentTaipeiTime } = require('../helpers/time-helpers')
+const { currentTaipeiTime, currentTaipeiTimeAddSeven } = require('../helpers/time-helpers')
 const { Op, Sequelize } = require('sequelize')
 const teacherController = {
   joinTeacher: (req, res) => {
@@ -29,13 +30,14 @@ const teacherController = {
   },
   getTeacher: async (req, res, next) => {
     const id = req.user.id
-
     try {
       const today = currentTaipeiTime()
+      const sevenDays = currentTaipeiTimeAddSeven()
       const teacher = await Teacher.findOne({
         where: { userId: id },
         include: [{ model: User, as: 'isUser' }],
-        raw: true
+        raw: true,
+        nest: true
       })
       if (!teacher) throw new Error('此用戶不存在')
       const teacherId = teacher.id
@@ -52,7 +54,10 @@ const teacherController = {
         Record.findAll({
           where: {
             teacherId,
-            startDate: { [Op.gte]: today }
+            startDate: {
+              [Op.gte]: today,
+              [Op.lte]: sevenDays
+            }
           },
           include: [{ model: User }, { model: Teacher }],
           raw: true,
@@ -75,7 +80,7 @@ const teacherController = {
       ])
       avgComment.avgScores = parseFloat(parseFloat(avgComment.avgScores).toFixed(1))
       const newRecords = findNewRecords.sort((a, b) => Date.parse(a.startDate) - Date.parse(b.startDate))
-      console.log('teacher.appointment', teacher.appointment)
+  
       res.render('teachers/profile', { teacher, allRecords, newRecords, allComment, avgComment })
     } catch (err) {
       next(err)
@@ -84,7 +89,12 @@ const teacherController = {
   editTeacher: async (req, res, next) => {
     const id = req.user.id
     try {
-      const teacher = await Teacher.findOne({ where: { userId: id }, raw: true })
+      const teacher = await Teacher.findOne({
+        where: { userId: id },
+        include: { model: User, as: 'isUser', attributes: ['email'] },
+        raw: true,
+        nest: true
+      })
       if (!teacher) throw new Error('此用戶不存在')
       res.render('teachers/edit-profile', { teacher })
     } catch (err) {
@@ -93,23 +103,56 @@ const teacherController = {
   },
   putTeacher: async (req, res, next) => {
     const id = req.user.id
-    const { name, introduction, teachingStyle, duringTime, url, appointment } = req.body
+    const { name, email, password, introduction, teachingStyle, duringTime, url, appointment } = req.body
     const { file } = req
     try {
-      const teacher = await Teacher.findOne({ where: { userId: id } })
-      if (!teacher) throw new Error('此用戶不存在')
-      const postUrl = await Teacher.findOne({ where: { url } })
+      const [user, teacher, postUrl, checkedEmail] = await Promise.all([
+        User.findOne({ where: { id } }),
+        Teacher.findOne({ where: { userId: id } }),
+        Teacher.findOne({
+          where: {
+            url,
+            id: {
+              [Op.ne]: id
+            }
+          }
+        }),
+        User.findOne({
+          where: {
+            email,
+            id: {
+              [Op.ne]: id
+            }
+          }
+        })
+      ])
+      if (!teacher) throw new Error('此老師不存在')
       if (postUrl) throw new Error('網址已被使用')
+      if (!email.includes('@')) throw new Error('email格式不正確')
+      if (checkedEmail) throw new Error('email已被使用')
+
+      let hash
+      if (password) {
+        hash = await bcrypt.hash(password, 10)
+      }
+
       const filePath = await imgurFileHandler(file)
-      await teacher.update({
-        name: name || teacher.name,
-        introduction: introduction || teacher.introduction,
-        teachingStyle: teachingStyle || teacher.teachingStyle,
-        duringTime: duringTime || teacher.duringTime,
-        url: url || teacher.url,
-        appointment,
-        image: filePath || teacher.image
-      })
+
+      Promise.all([
+        await teacher.update({
+          name: name || teacher.name,
+          introduction: introduction || teacher.introduction,
+          teachingStyle: teachingStyle || teacher.teachingStyle,
+          duringTime: duringTime || teacher.duringTime,
+          url: url || teacher.url,
+          appointment,
+          image: filePath || teacher.image
+        }),
+        await user.update({
+          email: email || user.email,
+          password: hash || user.password
+        })
+      ])
 
       return res.redirect('/teachers/profile')
     } catch (err) {

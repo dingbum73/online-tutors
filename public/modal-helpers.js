@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', function () {
             teacherUrlModal.value = '--'
             chooseLessonModalLabel.textContent = `預約失敗:${newRecord.info}`
           } else {
+            chooseLessonModalLabel.textContent = '預約成功'
             chooseLessonContent.value = newRecord.startDate
+            teacherUrlModal.value = newRecord.url
           }
         }).catch(err => {
           console.log(err)

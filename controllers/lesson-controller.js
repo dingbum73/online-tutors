@@ -114,12 +114,15 @@ const lessonController = {
       if (checked) return res.json({ status: 'error', info: '已被搶先選走了' })
       if (repeated) return res.json({ status: 'error', info: '該時段已有預約課' })
       // 創建新紀錄
-      const newRecord = await Record.create({
+      const createNewRecord = await Record.create({
         userId,
         teacherId: teacher.id,
         startDate: appointment,
         duringTime: teacher.duringTime
       })
+      const newRecord = createNewRecord.toJSON()
+      newRecord.url = teacher.url
+      console.log('newRecord', newRecord)
       return res.json(newRecord)
     } catch (err) {
       next(err)

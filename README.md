@@ -26,6 +26,8 @@
 - 進入專案資料夾：Bash 指令 cd online-tutors
 - 安裝套件：Bash 指令 npm install
 - 確認套件齊全(可參考下方開發工具)
+- 建立.env檔案並填入相關資料(可參考.env example檔案)
+- 建立temp資料夾
 - 設定MySQL資料庫：username & password與專案config/config.json中development相同
 - 建立資料庫資料表：Bash 指令 npx sequelize db:migrate
 - 建立種子資料：Bash 指令 npx sequelize db:seed:all

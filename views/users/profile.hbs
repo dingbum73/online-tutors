@@ -28,7 +28,9 @@
         <div class="border border-4 m-1 p-2" style="min-width: 250px ;min-height: 100px;">
           <img class="rounded-circle" src="{{this.Teacher.image}}" style="width: 50px ;height: 50px;"
             alt="this.Teacher.image"><strong>{{this.Teacher.name}}</strong>
-          <p>上課時間：{{this.startDate}}</p>
+          <p>上課時間：</p>
+          <p>{{this.startDate}}~</p>
+          <p>{{this.endDate}}</p>
           <p>上課網址：{{this.Teacher.url}}</p>
           <form action="/records/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
             <button type="submit" class="btn btn btn-danger btn-sm"

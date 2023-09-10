@@ -47,7 +47,7 @@ const searchController = {
       ])
       const teachers = findTeachers.rows.map(r => ({
         ...r,
-        introduction: r.introduction.substring(0, 50)
+        introduction: r.introduction && r.introduction.length ? `${r.introduction.substring(0, 50)}...` : ''
       }))
       const ranksIndex = rankIndex(ranks)
       if (teachers.length) {
@@ -81,7 +81,7 @@ const searchController = {
       })
       const users = findAllUsers.rows.map(user => ({
         ...user,
-        introduction: user.introduction.substring(0, 50)
+        introduction: user.introduction && user.introduction.length ? `${user.introduction.substring(0, 50)}...` : ''
       }))
       if (users.length) {
         res.render('admin/index', { users, pagination: getPagination(limit, page, findAllUsers.count), keyword })

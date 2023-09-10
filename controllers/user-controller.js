@@ -43,8 +43,8 @@ const userController = {
     res.redirect('/')
   },
   logout: (req, res) => {
-    req.flash('success_messages', '登出成功！')
     req.logout(() => {
+      req.flash('success_messages', '登出成功！')
       res.redirect('/signin')
     })
   },

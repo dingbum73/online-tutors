@@ -6,15 +6,16 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 // 找到台北時區
-
 const currentTaipeiTime = () => {
   return dayjs().tz('Asia/Taipei').format('YYYY-MM-DD HH:mm:ss')
 }
+
+// 找到台北時區並加7天
 const currentTaipeiTimeAddSeven = () => {
   return dayjs(currentTaipeiTime()).add(7, 'day').format('YYYY-MM-DD HH:mm:ss')
 }
 
-// 回傳日期、開始時間、結束時間
+// 回傳日期、開始日期時間、結束日期時間
 const timeTools = (startDate, duringTime) => {
   const newDay = dayjs(startDate).format('YYYY-MM-DD')
   const startTime = dayjs(startDate).format('YYYY-MM-DD HH:mm:ss')
@@ -38,6 +39,7 @@ const isLessonInFuture = madeAppointment => {
   return madeAppointmentInfuture
 }
 
+// 去除重複
 const deDuplicate = (newAppointment, madeAppointment) => {
   const result = newAppointment.filter(time => !madeAppointment.includes(time))
   return result
@@ -101,6 +103,8 @@ const resultAdd = result => result.map(dateStr => {
   return day.format('YYYY-MM-DD(ddd)HH:mm:ss')
 })
 
+// appointment老師可預約的星期[],madeAppointment已被預約的日期[],duringTime老師的上課時長
+// 回傳老師可以預約的時間'YYYY-MM-DD(ddd)HH:mm:ss' []
 const calculate = (appointment, madeAppointment, duringTime) => {
   const madeAppointmentFilter = isLessonInFuture(madeAppointment)
   const newAppointmentFilter = openLessonDay(appointment, duringTime)

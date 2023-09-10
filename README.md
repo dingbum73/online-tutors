@@ -1,7 +1,6 @@
 # online-tutors
 <img width="950" alt="signin" src="https://github.com/dingbum73/online-tutors/assets/124600894/33da1239-c349-43dd-b201-bc15b37981fe">
-<img width="950" alt="index" src="https://github.com/dingbum73/online-tutors/assets/124600894/f66a523d-dd42-4f62-86f2-07d96bb11d72">
-
+![index](https://github.com/dingbum73/online-tutors/assets/124600894/2c73d26a-1906-44a8-961b-31dc9696f06c)
 
 
 ## 介紹

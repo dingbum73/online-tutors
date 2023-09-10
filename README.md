@@ -11,15 +11,22 @@
 
 ### 功能
 - 登入登出功能
-- 使用者在首頁可以瀏覽全部課程(老師)清單，並提供搜尋功能
-- 使用者可以預約近兩週的課程
+- 在首頁可以瀏覽全部課程(老師)清單，並提供搜尋功能
+- 可以查看單一課程(老師)，資訊包含：老師教學風格、評價、預約課程
+- 可以預約近兩週的課程
+- 可以在New Schedule取消已預約課程
+- 可以更改帳密、自我介紹、頭像
+- 可以提交申請老師表單
+- 擁有老師身份，可以進入老師個人頁，並且更改教學風格、開放預約日期...等資訊
+- Admin後台，擁有Admin身份可以瀏覽全站使用者清單
 
 ## 開始使用
-- 安裝node.js and npm
+- 本機安裝node.js and npm
 - 複製專案到本機：Bash 指令 git clone https://github.com/dingbum73/online-tutors.git
 - 進入專案資料夾：Bash 指令 cd online-tutors
 - 安裝套件：Bash 指令 npm install
-- 確認套件齊全(可參考下方)
+- 確認套件齊全(可參考下方開發工具)
+- 設定MySQL資料庫：username & password與專案config/config.json中development相同
 - 建立資料庫資料表：Bash 指令 npx sequelize db:migrate
 - 建立種子資料：Bash 指令 npx sequelize db:seed:all
 - 啟動專案：Bash 指令 npm run dev
